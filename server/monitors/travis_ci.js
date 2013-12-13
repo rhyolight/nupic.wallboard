@@ -9,12 +9,10 @@ function status(req, res) {
       , repo = req.query.repo
       ;
     travis.repos({
-        owner_name: owner
+        owner_name: owner,
+        name: repo
     }, function(err, travisResponse) {
-        var targetRepo = _.find(travisResponse.repos, function(currentRepo) {
-            return currentRepo.slug == owner + '/' + repo
-        });
-        json.render(targetRepo, res);
+        json.render(travisResponse.repo, res);
     });
 }
 

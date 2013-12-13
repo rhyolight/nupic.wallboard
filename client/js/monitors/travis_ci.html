@@ -1,10 +1,44 @@
 <style>
-#{{namespace}} {
+.{{namespace}} {
     width: 400px;
 }
+.{{namespace}} .passed {
+    background-color: lime;
+}
+.{{namespace}} table tr th{
+    text-align: left;
+    padding-right: 20px;
+}
 </style>
-<div class="monitor" id="{{namespace}}">
-    <h3>{{title}}</h3>
-    <img class="img-polaroid" src="https://travis-ci.org/numenta/nupic.png?branch=master"/>
-    <div class="state">Last build {{state}} at {{time}}</div>
-</div>
+
+<h3>Latest <a target="_blank" href="https://travis-ci.org/{{owner}}/{{repo}}">{{repo}}</a> Travis Build</h3>
+<table>
+    <tbody>
+        <tr class={{state}}>
+            <th>Last Build</th>
+            <td>
+                <a target="_blank" href="https://travis-ci.org/{{owner}}/{{repo}}/builds/{{id}}">
+                    {{id}}
+                </a> {{state}}
+            </td>
+        </tr>
+        <tr>
+            <th>Started at</th>
+            <td>{{started}} <small>({{startedAgo}})</small></td>
+        </tr>
+        {{#if finished}}
+        <tr>
+            <th>Finished at</th>
+            <td>{{finished}} <small>({{finishedAgo}})</small></td>
+        </tr>
+        <tr>
+            <th>End to end time</th>
+            <td>{{duration}}</td>
+        </tr>
+        <tr>
+            <th>Compute time</th>
+            <td>{{computeTime}}</td>
+        </tr>
+        {{/if}}
+    </tbody>
+</table>

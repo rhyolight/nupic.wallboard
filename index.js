@@ -1,7 +1,7 @@
 var _ = require('underscore')
   , express = require('express')
-  , CONFIG =  require('config').App
-  , PORT = CONFIG.port
+  , CONFIG =  require('config')
+  , PORT = CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
   ;
 
@@ -9,7 +9,6 @@ function startServer() {
     console.log('starting server');
 
     var app = express()
-        // .use(express.logger())
         .use(express.json())
         .use(express.urlencoded())
         .use(express.static(__dirname + '/client'));

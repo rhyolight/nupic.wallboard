@@ -5,6 +5,8 @@ $(function() {
 
     var loadedTemplates = []
       , $monitors = $('#monitors')
+      , monitorWrapTopTmpl = Handlebars.compile('<div class="monitor {{namespace}}" id="{{id}}">')
+      , monitorWrapBottom = '</div>'
       ;
 
     function loadTemplate(src, id, callback) {
@@ -37,9 +39,10 @@ $(function() {
     }
 
     $.get('/_listMonitors', function(monitors) {
-        console.log('Loading scripts: ' + monitors.join(', '));
-        _.each(monitors, function(scriptPath) {
-            var namespace = scriptPath.split('/').pop().split('.').shift()
+        console.log(monitors);
+        _.each(monitors, function(monitorConfig, monitorId) {
+            var scriptPath = monitorConfig.js
+              , namespace = scriptPath.split('/').pop().split('.').shift()
               , templatePath = scriptPath.split('.js')[0] + '.html'
               ;
             async.parallel([
@@ -64,11 +67,15 @@ $(function() {
                   , template = Handlebars.compile($('#' + namespace).html())
                   , render = function(data) {
                         data.namespace = namespace;
-                        $monitors.append(template(data));
+                        $monitors.append(
+                            monitorWrapTopTmpl({
+                                id: monitorId, namespace: namespace
+                            }) + template(data) + monitorWrapBottom
+                        );
                     }
                   ;
                 console.log('Loaded ' + namespace + ' monitor');
-                WB[namespace](serverProxy, render);
+                WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
             });
         });
     });

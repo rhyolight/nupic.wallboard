@@ -16,14 +16,24 @@ var _ = require('underscore')
  * Lists all the monitors available to the client.
  */
 function listMonitors(req, res) {
-    var monitorDir = path.join(__dirname, '..', 'client', 'js', 'monitors');
+    var monitors = _.clone(CONFIG.monitors)
+      , monitorDir = path.join(__dirname, '..', 'client', 'js', 'monitors')
+      ;
     fs.readdir(monitorDir, function(err, files) {
-        var jsFiles = _.filter(files, function(file) {
-            return /\.js$/.test(file);
+        var monitorData = {}
+          , jsFiles = _.filter(files, function(file) {
+                return /\.js$/.test(file);
+            })
+          ;
+        _.each(monitors, function(monitorConfig, monitorId) {
+            monitorData[monitorId] = monitorConfig;
+            monitorData[monitorId].js = '/js/monitors/' + _.find(jsFiles, function(jsFile) {
+                return new RegExp(monitorConfig.type + '\.js').test(jsFile);
+            });
+            // TODO: We could put the html (and possibly css) file(s) here after
+            //       checking to ensure they exist.
         });
-        json.render(_.map(jsFiles, function (file) {
-            return '/js/monitors/' + file;
-        }), res);
+        json.render(monitorData, res);
     });
 }
 
@@ -32,7 +42,7 @@ function listMonitors(req, res) {
  */
 function monitorRequest(req, res) {
     var params = req.params;
-    console.log('Monitor request to ' + params.monitor + '/' + params.command);
+    // console.log('Monitor request to ' + params.monitor + '/' + params.command);
     monitors[params.monitor][params.command](req, res);
 }
 
@@ -46,7 +56,6 @@ function initializer(config) {
     _.each(monitorMap, function(initializer, name) {
         monitors[name] = initializer(CONFIG);
     });
-    console.log(monitors);
     return {
         '/_listMonitors': listMonitors
       , '/_monitorRequest/:monitor/:command': monitorRequest

@@ -1,0 +1,22 @@
+{
+    "app": {
+        "port": 8080
+    },
+    "monitors": {
+        "nupic_travis": {
+            "type": "travis_ci",
+            "options": {
+                "organization": "numenta",
+                "repository": "nupic"
+            }
+        },
+        "tools_travis": {
+            "type": "travis_ci",
+            "options": {
+                "organization": "numenta",
+                "repository": "nupic.tools"
+            }
+        }
+    }
+}
+
