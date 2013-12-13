@@ -6,6 +6,13 @@ This is a Node.js application used as a one-stop location to view the status of 
 
 This is a minimal framework using jquery, express, underscore, handlebars, and bootstrap. I'm just getting the main parts down.
 
+## Running it
+
+    npm install .
+    node index.js
+
+Then open http://localhost:8080.
+
 ## TODO
 
 - status of all running builds in travis
@@ -16,3 +23,5 @@ This is a minimal framework using jquery, express, underscore, handlebars, and b
 - mailing list statistics
 - recent mailing list messages
 - automatic refreshing of monitors
+- date of last API doc build
+
