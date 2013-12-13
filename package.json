@@ -1,0 +1,19 @@
+{
+    "name": "nupic.wallboard",
+    "version": "0.1.0",
+    "description": "Wallboard, build for NuPIC",
+    "author": "Matthew Taylor <matt@numenta.org>",
+    "main": "index.js",
+    "license": {
+        "type": "MIT"
+    },
+    "dependencies": {
+        "express":    "3.4.7",
+        "request":    "2.29.0",
+        "travis-ci":  "1.1.1",
+        "yaml":       "0.2.3",
+        "config":     "0.4.33",
+        "underscore": "1.5.2"
+    }
+}
+
