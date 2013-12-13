@@ -8,9 +8,11 @@ This is a minimal framework using jquery, express, underscore, handlebars, and b
 
 ## TODO
 
+- status of all running builds in travis
 - numenta.org website status check
 - recent commits on github
 - open PRs on github
 - current contributor count
 - mailing list statistics
 - recent mailing list messages
+- automatic refreshing of monitors
