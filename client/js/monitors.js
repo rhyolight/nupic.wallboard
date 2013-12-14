@@ -9,6 +9,7 @@ $(function() {
         function travisStateToStatus(state) {
             switch(state) {
                 case 'passed':
+                case 'good':
                     return 'success';
                 case 'failed':
                     return 'error';
@@ -74,7 +75,7 @@ $(function() {
         $.ajax({
             url: src,
             success: function(resp) {
-                var $script = $('<script type="text/template" id="' + id + '">' + resp + '</script>');
+                var $script = $('<script type="text/template" id="' + id + '_tmpl">' + resp + '</script>');
                 $('body').append($script);
                 loadedTemplates.push(id);
                 callback(null, id);
@@ -120,7 +121,7 @@ $(function() {
                             });
                         }
                     }
-                  , template = Handlebars.compile($('#' + namespace).html())
+                  , template = Handlebars.compile($('#' + namespace + '_tmpl').html())
                   , render = function(data) {
                         var $monitorEl = $('#' + monitorId)
                           , renderedHtml

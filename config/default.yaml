@@ -18,3 +18,5 @@
       options: 
         organization: "numenta"
         repository: "nupic"
+    github_status:
+      type: "github_status"
