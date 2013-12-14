@@ -19,10 +19,9 @@
     <tr>
         <th>Started</th>
         <th>Status</th>
+        <th>Build</th>
         {{#if pr}}
             <th>PR</th>
-        {{else}}
-            <th>Build</th>
         {{/if}}
     </tr>
     {{#each builds}}
@@ -30,16 +29,15 @@
             <td class="nowrap">{{started_at}}</td>
             <td>{{state}}</td>
 
+            <td>
+                <a target="_blank" href="https://travis-ci.org/{{../../owner}}/{{../../repo}}/builds/{{id}}">
+                {{id}}
+                </a>
+            </td>
             {{#if ../pr}}
                 <td>
                     <a target="_blank" href="https://github.com/{{../../owner}}/{{../../repo}}/pull/{{pull_request_number}}">
                         {{pull_request_title}}
-                    </a>
-                </td>
-            {{else}}
-                <td>
-                    <a target="_blank" href="https://travis-ci.org/{{../../owner}}/{{../../repo}}/builds/{{id}}">
-                    {{id}}
                     </a>
                 </td>
             {{/if}}
