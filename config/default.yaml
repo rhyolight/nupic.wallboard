@@ -20,3 +20,5 @@
         repository: "nupic"
     github_status:
       type: "github_status"
+    travis_status:
+      type: "travis_status"

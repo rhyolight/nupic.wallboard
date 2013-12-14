@@ -4,9 +4,7 @@ var request = require('request'),
 function handleProxyRequest(bundle, callback) {
     var url = bundle.endpoint,
         method = bundle.method || 'GET';
-
-    console.log('PROXY CALL TO: ' + url);
-
+    // console.log('PROXY CALL TO: ' + url);
     request({url: url, method: method}, function(err, resp, body) {
         if (err) {
             var error = new Error('The server did not response with ' +

@@ -21,7 +21,6 @@ function initializeModulesWithin(dir, exclusions) {
         if(! excluded && 
                 fileName.charAt(0) != "." 
                 && fileName.substr(fileName.length - 3) == ".js")   {
-            console.log(__dirname);
             output[moduleName] = require(requirePath + moduleName);
         }
     });
