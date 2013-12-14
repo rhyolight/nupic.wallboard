@@ -3,7 +3,7 @@ var _ = require('underscore')
   , path = require('path')
   , fs = require('fs')
   , CONFIG =  require('config')
-  , PORT = CONFIG.app.port
+  , PORT = process.env.PORT || CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
   ;
 
