@@ -8,7 +8,6 @@ $(function() {
             owner: owner
           , repo: repo
         }, function(status) {
-            console.log(status);
             var started = new Date(status.last_build_started_at)
               , finished = status.last_build_finished_at 
                             ? new Date(status.last_build_finished_at) 

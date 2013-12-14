@@ -18,6 +18,16 @@ function writeIndexHtml() {
     fs.writeFileSync(path.join(__dirname, 'client', 'index.html'), html);
 }
 
+function normalizeConfig(cfg) {
+    if (cfg.refresh_rate) {
+        _.each(cfg.monitors, function(monitor) {
+            if (! monitor.refresh_rate) {
+                monitor.refresh_rate = cfg.refresh_rate;
+            }
+        });
+    }
+}
+
 function startServer() {
     console.log('starting server');
 
@@ -39,5 +49,6 @@ function startServer() {
         });
 }
 
+normalizeConfig(CONFIG);
 writeIndexHtml();
 startServer();

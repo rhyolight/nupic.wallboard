@@ -125,9 +125,9 @@ $(function() {
     }
 
     $.get('/_listMonitors', function(monitors) {
-        console.log(monitors);
         _.each(monitors, function(monitorConfig, monitorId) {
             var scriptPath = monitorConfig.js
+              , loadingHtml = '<img src="/images/ajax-loader.gif" alt="loading"/>'
               , namespace = scriptPath.split('/').pop().split('.').shift()
               , templatePath = scriptPath.split('.js')[0] + '.html'
               ;
@@ -140,7 +140,8 @@ $(function() {
               }
             ], function(err) {
                 if (err) throw err;
-                var serverProxy = {
+                var $monitorEl = $('#' + monitorId)
+                  , serverProxy = {
                         get: function(command, data, callback) {
                             $.ajax({
                                   method: 'get'
@@ -152,24 +153,29 @@ $(function() {
                     }
                   , template = Handlebars.compile($('#' + namespace + '_tmpl').html())
                   , render = function(data) {
-                        var $monitorEl = $('#' + monitorId)
-                          , renderedHtml
-                          ;
+                        var renderedHtml;
                         data.namespace = namespace;
-                        if ($monitorEl.length) {
-                            renderedHtml = monitorWrapTopTmplNoId({
-                                namespace: namespace
-                            }) + template(data) + monitorWrapBottom
-                            $monitorEl.html(renderedHtml);
-                        } else {
-                            renderedHtml = monitorWrapTopTmpl({
-                                id: monitorId, namespace: namespace
-                            }) + template(data) + monitorWrapBottom
-                            $monitors.append(renderedHtml);
-                        }
+                        renderedHtml = monitorWrapTopTmplNoId({
+                            namespace: namespace
+                        }) + template(data) + monitorWrapBottom
+                        $('#' + monitorId).html(renderedHtml);
                     }
                   ;
+                if (! $monitorEl.length) {
+                    renderedHtml = monitorWrapTopTmpl({
+                        id: monitorId, namespace: namespace
+                    }) + loadingHtml + monitorWrapBottom
+                    $monitors.append(renderedHtml);
+                } else {
+                    $monitorEl.html(loadingHtml);
+                }
                 WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
+                if (monitorConfig.refresh_rate) {
+                    setInterval(function() {
+                        console.log('refreshing ' + monitorId);
+                        WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
+                    }, monitorConfig.refresh_rate * 1000);
+                }
             });
         });
     });

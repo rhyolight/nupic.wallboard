@@ -9,8 +9,6 @@ $(function() {
             var mark = response.indexOf('Generated on ')
               , startAt = mark + 13
               , dateString = response.substr(startAt, 24) + 'Z';
-            console.log(dateString);
-            console.log(new Date(dateString));
             template({ 
                 name: name
               , url: url

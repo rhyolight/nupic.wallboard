@@ -26,7 +26,6 @@ $(function() {
                     return ! build.pull_request;
                 });
               }
-            console.log(history);
             template(history);
         });
     };
