@@ -21,7 +21,8 @@ $(function() {
         }
 
         function formatDate(date) {
-            return moment(date).format('llll');
+            // return moment(date).format('llll');
+            return moment(date).format('ddd h:mm A');
         }
 
         function timeAgo(date) {
@@ -32,29 +33,18 @@ $(function() {
             return moment(start).from(end).split(' ago').shift();
         }
 
-        function buildUnitString(value, unit) {
-            if (value != 1) {
-                return value + ' ' + unit + 's';
-            } else {
-                return value + ' ' + unit;
-            }
-        }
-
         function secondsToDurationString(seconds) {
-            var hourStr = 'hour'
-              , minStr = 'minute'
-              , secStr = 'second'
-              , hour = Math.floor(seconds / 3600)
+            var hour = Math.floor(seconds / 3600)
               , min = Math.floor(seconds / 60) - hour * 60
               , sec = seconds % 60
-              , output = ''
+              , output = sec + 's'
               ;
-            output += buildUnitString(sec, secStr);
+            
             if (min > 0) {
-                output = buildUnitString(min, minStr) + ', ' + output;
+                output = min + 'm ' + output;
             }
             if (hour > 0) {
-                output = buildUnitString(hour, hourStr) + ', ' + output;
+                output = hour + 'h ' + output;
             }
             return output;
         }
@@ -64,7 +54,6 @@ $(function() {
           , formatDate: formatDate
           , timeAgo: timeAgo
           , timeBetween: timeBetween
-          , buildUnitString: buildUnitString
           , secondsToDurationString: secondsToDurationString
         };
     }());
