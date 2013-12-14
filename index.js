@@ -5,6 +5,7 @@ var _ = require('underscore')
   , CONFIG =  require('config')
   , PORT = process.env.PORT || CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
+  , requestProxy = require('./server/requestProxy')
   ;
 
 function writeIndexHtml() {
@@ -23,7 +24,9 @@ function startServer() {
     var app = express()
         .use(express.json())
         .use(express.urlencoded())
-        .use(express.static(__dirname + '/client'));
+        .use(express.static(__dirname + '/client'))
+        // HTTP request proxy
+        .use(requestProxy());
 
     // Adding handling for system ajax calls.
     _.each(ajaxHandlers, function(handler, path) {

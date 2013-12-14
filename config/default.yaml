@@ -3,13 +3,13 @@
     port: 8080
   layout: 'nupic'
   monitors: 
-    nupic_travis_status: 
-      type: "travis_status"
+    nupic_travis_latest: 
+      type: "travis_latest"
       options: 
         organization: "numenta"
         repository: "nupic"
-    tools_travis_status: 
-      type: "travis_status"
+    tools_travis_latest: 
+      type: "travis_latest"
       options: 
         organization: "numenta"
         repository: "nupic.tools"

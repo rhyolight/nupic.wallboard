@@ -50,12 +50,36 @@ $(function() {
             return output;
         }
 
+        function proxyHttp(url, callback) {
+            var responded = false;
+            $.ajax('/_apiProxy', {
+                type: 'POST',
+                data: {
+                    endpoint: url
+                },
+                success: function(resp) {
+                    responded = true;
+                    callback(null, resp);
+                },
+                failure: function(err) {
+                    responded = true;
+                    console.error(err);
+                },
+                complete: function(resp) {
+                    if (! responded && resp.status === 200 && resp.responseText) {
+                        callback(null, resp.responseText);
+                    }
+                }
+            });
+        }
+
         WB.utils = {
             travisStateToStatus: travisStateToStatus
           , formatDate: formatDate
           , timeAgo: timeAgo
           , timeBetween: timeBetween
           , secondsToDurationString: secondsToDurationString
+          , proxyHttp: proxyHttp
         };
     }());
 

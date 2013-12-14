@@ -30,7 +30,7 @@ $(function() {
         });
     };
 
-    window.WB.travis_status = initialize;
+    window.WB.travis_latest = initialize;
 
 });
 
