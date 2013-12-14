@@ -10,6 +10,7 @@ $(function() {
             switch(state) {
                 case 'passed':
                 case 'good':
+                case 'none':
                     return 'success';
                 case 'failed':
                     return 'error';
@@ -52,7 +53,7 @@ $(function() {
 
         function proxyHttp(url, callback) {
             var responded = false;
-            $.ajax('/_apiProxy', {
+            $.ajax('/_requestProxy', {
                 type: 'POST',
                 data: {
                     endpoint: url
