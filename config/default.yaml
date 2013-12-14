@@ -8,6 +8,11 @@
       options: 
         organization: "numenta"
         repository: "nupic"
+    experiments_travis_latest: 
+      type: "travis_latest"
+      options: 
+        organization: "numenta"
+        repository: "experiments"
     tools_travis_latest: 
       type: "travis_latest"
       options: 

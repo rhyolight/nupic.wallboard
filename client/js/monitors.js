@@ -19,6 +19,8 @@ $(function() {
                 case 'errored':
                 case 'canceled':
                     return 'warning';
+                case 'started':
+                    return 'info';
                 default:
                     return 'unknown';
             }
