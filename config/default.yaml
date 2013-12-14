@@ -3,37 +3,53 @@
     port: 8080
   layout: 'nupic'
   monitors: 
+
     nupic_travis_latest: 
       type: "travis_latest"
       options: 
         organization: "numenta"
         repository: "nupic"
+
     experiments_travis_latest: 
       type: "travis_latest"
       options: 
         organization: "numenta"
         repository: "experiments"
+
     tools_travis_latest: 
       type: "travis_latest"
       options: 
         organization: "numenta"
         repository: "nupic.tools"
+
     nupic_travis_builds: 
       type: "travis_builds"
-      options: 
+      options:
+        pull_requests: false
         organization: "numenta"
         repository: "nupic"
+
+    nupic_travis_pr_builds: 
+      type: "travis_builds"
+      options:
+        pull_requests: true
+        organization: "numenta"
+        repository: "nupic"
+
     github_status:
       type: "github_status"
+
     travis_status:
       type: "travis_status"
+
     numenta_org_status:
       type: "http_status"
       options:
         name: "numenta.org"
         url: "http://numenta.org"
+
     doc_build_status:
       type: "doxygen_build"
       options:
-        name: "NuPIC"
+        name: "nupic"
         url: "http://numenta.org/docs/"
