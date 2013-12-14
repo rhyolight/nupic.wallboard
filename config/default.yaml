@@ -1,6 +1,7 @@
 ---
   app: 
     port: 8080
+  layout: 'nupic'
   monitors: 
     nupic_travis_status: 
       type: "travis_status"

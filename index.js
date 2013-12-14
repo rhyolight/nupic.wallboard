@@ -1,9 +1,21 @@
 var _ = require('underscore')
   , express = require('express')
+  , path = require('path')
+  , fs = require('fs')
   , CONFIG =  require('config')
   , PORT = CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
   ;
+
+function writeIndexHtml() {
+    var layout = 'default'
+     ,  html;
+    if (CONFIG.layout) {
+        layout = CONFIG.layout;
+    }
+    html = fs.readFileSync(path.join(__dirname, 'layouts', layout + '.html'));
+    fs.writeFileSync(path.join(__dirname, 'client', 'index.html'), html);
+}
 
 function startServer() {
     console.log('starting server');
@@ -24,4 +36,5 @@ function startServer() {
         });
 }
 
+writeIndexHtml();
 startServer();

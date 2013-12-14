@@ -61,6 +61,7 @@ $(function() {
     var loadedTemplates = []
       , $monitors = $('#monitors')
       , monitorWrapTopTmpl = Handlebars.compile('<div class="monitor {{namespace}}" id="{{id}}">')
+      , monitorWrapTopTmplNoId = Handlebars.compile('<div class="monitor {{namespace}}">')
       , monitorWrapBottom = '</div>'
       ;
 
@@ -121,15 +122,23 @@ $(function() {
                     }
                   , template = Handlebars.compile($('#' + namespace).html())
                   , render = function(data) {
+                        var $monitorEl = $('#' + monitorId)
+                          , renderedHtml
+                          ;
                         data.namespace = namespace;
-                        $monitors.append(
-                            monitorWrapTopTmpl({
+                        if ($monitorEl.length) {
+                            renderedHtml = monitorWrapTopTmplNoId({
+                                namespace: namespace
+                            }) + template(data) + monitorWrapBottom
+                            $monitorEl.html(renderedHtml);
+                        } else {
+                            renderedHtml = monitorWrapTopTmpl({
                                 id: monitorId, namespace: namespace
                             }) + template(data) + monitorWrapBottom
-                        );
+                            $monitors.append(renderedHtml);
+                        }
                     }
                   ;
-                console.log('Loaded ' + namespace + ' monitor');
                 WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
             });
         });
