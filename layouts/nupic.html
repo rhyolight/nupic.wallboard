@@ -8,7 +8,6 @@
     <link href="css/style.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <h1>NuPIC Wallboard</h1>
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.1.2.js"></script>
@@ -17,10 +16,11 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="js/monitors.js"></script>
 
-    <div id="monitors">
+
+    <section id="monitors">
       <table><tbody>
         <tr><td colspan="3">
-          Overall status
+          <h1 class="text-center">NuPIC Wallboard</h1>
         </td></tr>
         <tr>
           <td style="vertical-align:top">
@@ -33,11 +33,12 @@
           <td style="vertical-align:top">
             <div id="github_status"></div>
             <div id="travis_status"></div>
+            <div id="numenta_org_status"></div>
           </td>
         </tr>
       </tbody></table>
 
-    </div>
+    </section>
 
   </body>
 </html>

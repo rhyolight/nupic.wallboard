@@ -11,8 +11,10 @@ $(function() {
                 case 'passed':
                 case 'good':
                 case 'none':
+                case 'up':
                     return 'success';
                 case 'failed':
+                case 'down':
                     return 'error';
                 case 'errored':
                 case 'canceled':

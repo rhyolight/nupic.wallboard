@@ -22,3 +22,8 @@
       type: "github_status"
     travis_status:
       type: "travis_status"
+    numenta_org_status:
+      type: "http_status"
+      options:
+        name: "numenta.org"
+        url: "http://numenta.org"

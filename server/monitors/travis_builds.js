@@ -12,6 +12,7 @@ function history(req, res) {
         owner_name: owner,
         name: repo
     }, function(err, travisResponse) {
+        if (err) { console.error(err); }
         json.render(travisResponse, res);
     });
 }
