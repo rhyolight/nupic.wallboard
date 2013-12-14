@@ -22,3 +22,4 @@ Then open http://localhost:8080.
 - mailing list statistics
 - recent mailing list messages
 - automatic refreshing of monitors
+- green / yellow / red state of doc build based upon date
