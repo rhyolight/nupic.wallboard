@@ -3,6 +3,72 @@ window.WB = {};
 
 $(function() {
 
+    // Utility functions.
+    (function() {
+
+        function travisStateToStatus(state) {
+            switch(state) {
+                case 'passed':
+                    return 'success';
+                case 'failed':
+                    return 'error';
+                case 'errored':
+                case 'canceled':
+                    return 'warning';
+                default:
+                    return 'unknown';
+            }
+        }
+
+        function formatDate(date) {
+            return moment(date).format('llll');
+        }
+
+        function timeAgo(date) {
+            return moment(date).from(new Date());
+        }
+
+        function timeBetween(start, end) {
+            return moment(start).from(end).split(' ago').shift();
+        }
+
+        function buildUnitString(value, unit) {
+            if (value != 1) {
+                return value + ' ' + unit + 's';
+            } else {
+                return value + ' ' + unit;
+            }
+        }
+
+        function secondsToDurationString(seconds) {
+            var hourStr = 'hour'
+              , minStr = 'minute'
+              , secStr = 'second'
+              , hour = Math.floor(seconds / 3600)
+              , min = Math.floor(seconds / 60) - hour * 60
+              , sec = seconds % 60
+              , output = ''
+              ;
+            output += buildUnitString(sec, secStr);
+            if (min > 0) {
+                output = buildUnitString(min, minStr) + ', ' + output;
+            }
+            if (hour > 0) {
+                output = buildUnitString(hour, hourStr) + ', ' + output;
+            }
+            return output;
+        }
+
+        WB.utils = {
+            travisStateToStatus: travisStateToStatus
+          , formatDate: formatDate
+          , timeAgo: timeAgo
+          , timeBetween: timeBetween
+          , buildUnitString: buildUnitString
+          , secondsToDurationString: secondsToDurationString
+        };
+    }());
+
     var loadedTemplates = []
       , $monitors = $('#monitors')
       , monitorWrapTopTmpl = Handlebars.compile('<div class="monitor {{namespace}}" id="{{id}}">')

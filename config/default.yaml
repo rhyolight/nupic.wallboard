@@ -1,0 +1,19 @@
+---
+  app: 
+    port: 8080
+  monitors: 
+    nupic_travis_status: 
+      type: "travis_status"
+      options: 
+        organization: "numenta"
+        repository: "nupic"
+    # tools_travis_status: 
+    #   type: "travis_status"
+    #   options: 
+    #     organization: "numenta"
+    #     repository: "nupic.tools"
+    nupic_travis_builds: 
+      type: "travis_builds"
+      options: 
+        organization: "numenta"
+        repository: "nupic"

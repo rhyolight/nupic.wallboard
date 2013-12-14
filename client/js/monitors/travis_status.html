@@ -2,9 +2,6 @@
 .{{namespace}} {
     width: 400px;
 }
-.{{namespace}} .passed {
-    background-color: lime;
-}
 .{{namespace}} table tr th{
     text-align: left;
     padding-right: 20px;
@@ -12,9 +9,9 @@
 </style>
 
 <h3>Latest <a target="_blank" href="https://travis-ci.org/{{owner}}/{{repo}}">{{repo}}</a> Travis Build</h3>
-<table>
+<table class="table">
     <tbody>
-        <tr class={{state}}>
+        <tr class={{status}}>
             <th>Last Build</th>
             <td>
                 <a target="_blank" href="https://travis-ci.org/{{owner}}/{{repo}}/builds/{{id}}">

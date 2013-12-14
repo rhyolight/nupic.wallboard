@@ -1,0 +1,35 @@
+<style>
+.{{namespace}} {
+    width: 400px;
+}
+.{{namespace}} .passed {
+    background-color: lime;
+}
+.{{namespace}} .failed {
+    background-color: red;
+}
+.{{namespace}} .canceled, .{{namespace}} .errored {
+    background-color: gray;
+}
+</style>
+
+<h3><a target="_blank" href="https://travis-ci.org/{{owner}}/{{repo}}">{{repo}}</a> Travis History</h3>
+
+<table class="table"><tbody>
+    <tr>
+        <th>Started</th><th>Status</th><th>Build</th>
+    </tr>
+    {{#each builds}}
+        <tr class="{{status}}">
+            <td>{{started_at}}</td>
+            <td>{{state}}</td>
+            <td>
+                <a target="_blank" href="https://travis-ci.org/{{../owner}}/{{../repo}}/builds/{{id}}">
+                {{id}}
+                </a>
+            </td>
+        </tr>
+    {{/each}}
+
+</tbody></table>
+</table>
