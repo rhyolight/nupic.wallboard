@@ -27,3 +27,8 @@
       options:
         name: "numenta.org"
         url: "http://numenta.org"
+    doc_build_status:
+      type: "doxygen_build"
+      options:
+        name: "NuPIC"
+        url: "http://numenta.org/docs/"
