@@ -14,6 +14,9 @@
         "yaml":       "0.2.3",
         "config":     "0.4.33",
         "underscore": "1.5.2"
+    },
+    "engines": {
+        "node": "0.10.x"
     }
 }
 
