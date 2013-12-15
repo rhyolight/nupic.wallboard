@@ -1,0 +1,8 @@
+---
+  app: 
+    port: 8080
+
+  github:
+    username: "numenta-ci"
+    password: "tijj3UikYB9vmx"
+
