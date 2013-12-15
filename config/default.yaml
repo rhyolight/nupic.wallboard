@@ -45,6 +45,9 @@
     travis_status:
       type: "travis_status"
 
+    issues_status:
+      type: "issues_status"
+
     numenta_org_status:
       type: "http_status"
       options:

@@ -1,7 +1,7 @@
 h1 {
   width: 100%;
 }
-table#status {
+table#status, table#dev {
   width: 100%;
 }
 .etabs { margin: 0; padding: 0; }

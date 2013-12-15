@@ -14,7 +14,7 @@ function status(req, res) {
     }, function(err, travisResponse) {
         if (err) {
             console.error(err);
-            json.renderErrors(err, res);
+            json.renderErrors([err], res);
         } else {
             json.render(travisResponse.repo, res);
         }
