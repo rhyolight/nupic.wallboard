@@ -1,0 +1,37 @@
+h1 {
+  width: 100%;
+}
+table#status {
+  width: 100%;
+}
+.etabs { margin: 0; padding: 0; }
+.tab { 
+  display: inline-block; zoom:1; 
+  *display:inline; 
+  background: #eee; 
+  border: solid 1px #CCC; 
+  border-bottom: none; 
+}
+.tab a { 
+  font-size: 14px; 
+  line-height: 2em; 
+  display: block; 
+  padding: 0 10px; 
+  outline: none; 
+}
+.tab a:hover { 
+  text-decoration: underline; 
+}
+.tab.active { 
+  background: #fff; 
+  padding-top: 6px; 
+  position: relative; 
+  top: 1px; 
+  border-color: #EEE; 
+}
+.tab a.active { font-weight: bold; }
+.tab-container .panel-container { 
+  background: #fff; 
+  border: solid #666 1px; 
+  padding: 10px; 
+}
