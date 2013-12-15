@@ -2,9 +2,7 @@ var _ = require('underscore')
   , express = require('express')
   , path = require('path')
   , fs = require('fs')
-  // , CONFIG =  require('config')
-  , CONFIG = require('./server/utils/configReader').read(path.join(__dirname, 'config/config.yaml'))
-
+  , CONFIG =  require('config')
   , PORT = process.env.PORT || CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
   , requestProxy = require('./server/requestProxy')
