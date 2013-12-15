@@ -1,0 +1,49 @@
+<h3><a taret="_blank" href="{{url}}">tooling server</a></h3>
+<table class="table">
+    <tbody>
+        <tr class={{state}}>
+            <th>Status</th>
+            <td>
+                {{#if up}}
+                <p>up</p>
+                {{else}}
+                <p>down</p>
+                {{/if}}
+            </td>
+        </tr>
+        {{#if up}}
+        <tr>
+            <th>Monitoring</th>
+            <td>
+                <ul>
+                    {{#each monitors}}
+                        <li><a target="_blank" href="https://github.com/{{this}}/">{{this}}</a></li>
+                    {{/each}}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>Validators</th>
+            <td>
+                <ul>
+                    {{#each validators}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>URL Handlers</th>
+            <td>
+                <ul>
+                    {{#each handlers}}
+                        {{#each this}}
+                            <li>{{@key}}</li>
+                        {{/each}}
+                    {{/each}}
+                </ul>
+            </td>
+        </tr>
+        {{/if}}
+    </tbody>
+</table>
