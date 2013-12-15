@@ -29,26 +29,6 @@ function read(configFile) {
 
     userConfig = readConfigFileIntoObject(userFile);
     _.extend(config, userConfig);
-    // if (userConfig) {
-    //     // ['host', 'port', 'logDirectory', 'validators'].forEach(function(key) {
-    //     //     if (userConfig[key] !== undefined) {
-    //     //         config[key] = userConfig[key];
-    //     //     }
-    //     // });
-    //     if (userConfig.monitors) {
-
-    //     }
-    //     Object.keys(userConfig.monitors).forEach(function(outerKey) {
-    //         if (! config.monitors[outerKey]) {
-    //             config.monitors[outerKey] = userConfig.monitors[outerKey];
-    //         } else {
-    //             Object.keys(userConfig.monitors[outerKey]).forEach(function(innerKey) {
-    //                 config.monitors[outerKey][innerKey] = userConfig.monitors[outerKey][innerKey];
-    //             });
-    //         }
-    //     });
-    // }
-    console.log(config);
     return config;
 }
 
