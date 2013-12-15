@@ -18,7 +18,7 @@
         "express":    "3.4.7",
         "request":    "2.29.0",
         "travis-ci":  "1.1.1",
-        "yaml":       "0.2.3",
+        "yaml-js":       "0.0.8",
         "config":     "0.4.33",
         "underscore": "1.5.2"
     },
