@@ -17,9 +17,7 @@ Then open http://localhost:8080.
 
 - status of all running builds in travis
 - recent commits on github
-- open PRs on github
 - current contributor count
 - mailing list statistics
 - recent mailing list messages
-- automatic refreshing of monitors
 - green / yellow / red state of doc build based upon date
