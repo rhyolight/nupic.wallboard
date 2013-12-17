@@ -30,13 +30,13 @@
             <td>{{state}}</td>
 
             <td>
-                <a target="_blank" href="https://travis-ci.org/{{../../owner}}/{{../../repo}}/builds/{{id}}">
+                <a target="_blank" href="https://travis-ci.org/{{../owner}}/{{../repo}}/builds/{{id}}">
                 {{id}}
                 </a>
             </td>
             {{#if ../pr}}
                 <td>
-                    <a target="_blank" href="https://github.com/{{../../owner}}/{{../../repo}}/pull/{{pull_request_number}}">
+                    <a target="_blank" href="https://github.com/{{../owner}}/{{../repo}}/pull/{{pull_request_number}}">
                         {{pull_request_title}}
                     </a>
                 </td>
