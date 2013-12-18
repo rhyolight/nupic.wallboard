@@ -10,6 +10,10 @@ $(function() {
           ;
         server.get('history', slug, function(responseData) {
             var history = $.extend({pr: false}, slug, responseData);
+            // Sort by build date descending
+            history.builds = _.sortBy(history.builds, function(build) {
+                return new Date(build.started_at);
+            }).reverse();
             _.each(history.builds, function(build) {
                 build.status = WB.utils.travisStateToStatus(build.state);
                 build.started_at = WB.utils.formatDate(build.started_at);
