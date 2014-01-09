@@ -2,11 +2,12 @@ $(function() {
 
     var issuesUrl = "http://issues.numenta.org:8081/status.json?callback=?"
       , statusUrl = "http://issues.numenta.org:8081/status"
+      // give up if no response in 3s
+      , TIMEOUT = 3000
       ;
 
     function initialize(id, config, server, template) {
         $.getJSON(issuesUrl, function(data) {
-            console.log(data.handlers);
             template({
                 url: statusUrl
               , up: true
@@ -14,6 +15,7 @@ $(function() {
               , monitors: data.monitors
               , validators: data.validators
               , handlers: data.handlers
+              , timeout: TIMEOUT
             });
         }).fail(function(err) {
             template({
