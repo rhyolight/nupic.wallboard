@@ -60,7 +60,7 @@ Now you can use this `greeting_repeat` option to repeat your message:
         function initialize(id, config, server, template) {
             var greetingRepeat = config.greeting_repeat
               , initialMessage = 'Hello, world!'
-              , finalMessage = _.range(greetingRepeat).each(function() {
+              , finalMessage = _.range(greetingRepeat).map(function() {
                     return initialMessage;
                 }).join('<br/>');
 
