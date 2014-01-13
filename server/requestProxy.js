@@ -7,9 +7,10 @@ function handleProxyRequest(bundle, callback) {
 
     request({url: url, method: method}, function(err, resp, body) {
         if (err) {
-            var error = new Error('The server did not response with ' +
-                'a success status code. Please inspect the data ' +
-                'response object for more details.');
+            var error = new Error('Call to ' + url + ' failed!.\n' +
+                'The server did not response with ' +
+                'a success status code.');
+            console.error(resp);
             return callback(error, body, resp);
         }
         callback(null, body, resp);
