@@ -20,7 +20,6 @@ $(function() {
                 pr.created_at = WB.utils.timeAgo(pr.created_at)
                 pr.latest_status = pr.statuses[0];
             });
-            console.log(prs);
             template({
                 overdue: overdueCount
               , open: prs.length
