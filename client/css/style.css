@@ -8,3 +8,13 @@ section#monitors {
 .nowrap {
     white-space: nowrap;
 }
+
+table.popover-table {
+	font-size:85%;
+	margin-bottom:0;
+	line-height:normal;
+}
+
+table.popover-table tr:first-child td, table.popover-table tr:first-child th {
+	border-top:none;
+}
