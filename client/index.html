@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NuPIC Wallboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/style.css" rel="stylesheet" media="screen">
+    <link href="css/nupic.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.1.2.js"></script>
+    <script src="/js/lib/async.js"></script>
+    <script src="/js/lib/moment.min.js"></script>
+    <script src="/js/lib/jquery.easytabs.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/monitors.js"></script>
+    <script src="/js/lib/enable_popovers.js"></script>
+
+    <!-- <div id="settings"></div> -->
+
+    <div id="tab-container" class="tab-container">
+      <ul class='etabs'>
+        <li class='tab'><a href="#status-tab">status</a></li>
+        <li class='tab'><a href="#dev-tab">dev</a></li>
+      </ul>
+      <div id="status-tab">
+
+        <h1 class="text-center">nupic status
+          <a target="_blank" href="https://travis-ci.org/numenta/nupic">
+          <img src="https://travis-ci.org/numenta/nupic.png?branch=master"/>
+          </a>
+        </h1>
+
+        <table id="status"><tbody>
+
+          <tr><td colspan="3">
+            <ul class="inline">
+              <li id="github_status"></li>
+              <li id="travis_status"></li>
+              <li id="numenta_org_status"></li>
+              <li id="doc_build_status"></li>
+            </ul>
+          </td></tr>
+
+          <tr>
+
+            <td style="vertical-align:top">
+              <div id="nupic_travis_latest"></div>
+            </td>
+
+            <td style="vertical-align:top">
+              <div id="nupic_travis_builds"></div>
+            </td>
+
+            <td style="vertical-align:top">
+              <div id="nupic_travis_pr_builds"></div>
+            </td>
+
+          </tr>
+        </tbody></table>
+
+      </div>
+      <div id="dev-tab">
+
+        <table id="dev"><tbody>
+
+          <tr>
+
+            <td style="vertical-align:top">
+              <div id="tools_travis_latest"></div>
+            </td>
+
+            <td style="vertical-align:top">
+              <div id="nupic_pr_report"></div>
+            </td>
+
+            <td style="vertical-align:top">
+              <div id="issues_status"></div>
+            </td>
+
+          </tr>
+        </tbody></table>
+
+      </div>
+    </div>
+
+    <script>
+      $(function() {
+          $('#tab-container').easytabs();
+      });
+    </script>
+
+  </body>
+</html>

@@ -30,7 +30,7 @@
             <td>{{state}}</td>
 
             <td>
-                <a target="_blank" href="https://travis-ci.org/{{../owner}}/{{../repo}}/builds/{{id}}">
+                <a target="_blank" href="https://travis-ci.org/{{../owner}}/{{../repo}}/builds/{{id}}" data-toggle="popover" data-html="true" data-placement="top" data-trigger="hover" data-content="<table class='table popover-table'><tr><th>Author</th><td>{{commit.author_name}}</td></tr><tr><th>Commit</th><td>{{commit_id}}</td></tr><tr><th>Message</th><td>{{commit.message}}</td></tr><tr><th>Committed</th><td>{{commit.committed_at}}</td></tr><tr><th>Started</th><td>{{started_at}}</td></tr><tr><th>Finished</th><td>{{finished_at}}</td></tr><tr><th>Duration</th><td>{{duration}}</td></tr></table>">
                 {{id}}
                 </a>
             </td>
