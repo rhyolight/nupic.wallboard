@@ -62,3 +62,5 @@
 
     nupic_pr_report:
       type: "pr_report"
+      refresh_rate: 300
+
