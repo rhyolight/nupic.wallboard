@@ -14,14 +14,14 @@ $(function() {
                 template({
                     url: statusUrl
                   , up: false
-                  , state: 'error'
+                  , status: 'error'
                 });
             }
           , success: function(data) {
                 template({
                     url: statusUrl
                   , up: true
-                  , state: 'success'
+                  , status: 'success'
                   , monitors: data.monitors
                   , validators: data.validators
                   , handlers: data.handlers
