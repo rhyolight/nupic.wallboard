@@ -70,6 +70,10 @@
 .pull-request .pending {
     background-color: #ccc;
 }
+.pull-request .milestone {
+    text-align: right;
+    font-weight: bold;
+}
 </style>
 <h3>nupic <a target="_blank" href="https://github.com/numenta/nupic/pulls">open pull requests</a> <small>{{open}} open, {{overdue}} overdue</h3>
 {{#each prs}}
@@ -97,5 +101,12 @@
             </tbody></table>
             <div class="status {{latest_status.state}}">{{latest_status.description}}</div>
             <div class="body">{{body}}</div>
+            {{#if milestone}}
+                <div class="milestone">
+                    <a href="https://github.com/{{../../slug}}/issues?milestone={{milestone.number}}&page=1&state=open" target="_blank">
+                    {{milestone.title}}
+                    </a>
+                </div>
+            {{/if}}
     </div>
 {{/each}}
