@@ -1,7 +1,8 @@
 $(function() {
 
     var OVERDUE_GAP = 7 * 24 * 60 * 60 * 1000
-      , prUrl = "http://issues.numenta.org:8081/prStatus?repo=numenta/nupic&callback=?";
+      , SLUG = 'numenta/nupic'
+      , prUrl = 'http://issues.numenta.org:8081/prStatus?repo=' + SLUG + '&callback=?';
 
     function initialize(id, config, server, template) {
         var now = new Date().getTime()
@@ -21,7 +22,8 @@ $(function() {
                 pr.latest_status = pr.statuses[0];
             });
             template({
-                overdue: overdueCount
+                slug: SLUG
+              , overdue: overdueCount
               , open: prs.length
               , prs: prs
             });
