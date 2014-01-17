@@ -76,37 +76,41 @@
 }
 </style>
 <h3>nupic <a target="_blank" href="https://github.com/numenta/nupic/pulls">open pull requests</a> <small>{{open}} open, {{overdue}} overdue</h3>
-{{#each prs}}
-    {{#if overdue}}
-        <div class="pull-request overdue">
-    {{else}}
-        <div class="pull-request">
-    {{/if}}
-            <table width="100%"><tbody>
-            <tr>
-                <th><a target="_blank" href="{{html_url}}">{{title}}</a></th>
-                <th class="right" colspan="2"><a href="http://github.com/{{user.login}}" target="_blank">{{user.login}}</a></th>
-            </tr>
-            <tr>
-                <td>Opened <span class="open-since">{{created_at}}</span></td>
-                <td>
-                    {{#if latest_status.target_url}}
-                        <a href="{{latest_status.target_url}}" target="_blank" title="Target URL">Build results</a>
-                    {{/if}}
-                </td>
-                <td>
-                    <a href="http://issues.numenta.org:8081/shaStatus?repo=numenta/nupic&sha={{head.sha}}" target="_blank" title="See all statuses for this SHA">Status history (JSON)</a>
-                </td>
-            </tr>
-            </tbody></table>
-            <div class="status {{latest_status.state}}">{{latest_status.description}}</div>
-            <div class="body">{{body}}</div>
-            {{#if milestone}}
-                <div class="milestone">
-                    <a href="https://github.com/{{../../slug}}/issues?milestone={{milestone.number}}&page=1&state=open" target="_blank">
-                    {{milestone.title}}
-                    </a>
-                </div>
-            {{/if}}
-    </div>
-{{/each}}
+{{#if status}}
+    <div class="error">There was a problem retrieving PRs from the tooling server. This is usually because of Github API rate limits.</div>
+{{else}}
+    {{#each prs}}
+        {{#if overdue}}
+            <div class="pull-request overdue">
+        {{else}}
+            <div class="pull-request">
+        {{/if}}
+                <table width="100%"><tbody>
+                <tr>
+                    <th><a target="_blank" href="{{html_url}}">{{title}}</a></th>
+                    <th class="right" colspan="2"><a href="http://github.com/{{user.login}}" target="_blank">{{user.login}}</a></th>
+                </tr>
+                <tr>
+                    <td>Opened <span class="open-since">{{created_at}}</span></td>
+                    <td>
+                        {{#if latest_status.target_url}}
+                            <a href="{{latest_status.target_url}}" target="_blank" title="Target URL">Build results</a>
+                        {{/if}}
+                    </td>
+                    <td>
+                        <a href="http://issues.numenta.org:8081/shaStatus?repo=numenta/nupic&sha={{head.sha}}" target="_blank" title="See all statuses for this SHA">Status history (JSON)</a>
+                    </td>
+                </tr>
+                </tbody></table>
+                <div class="status {{latest_status.state}}">{{latest_status.description}}</div>
+                <div class="body">{{body}}</div>
+                {{#if milestone}}
+                    <div class="milestone">
+                        <a href="https://github.com/{{../../slug}}/issues?milestone={{milestone.number}}&page=1&state=open" target="_blank">
+                        {{milestone.title}}
+                        </a>
+                    </div>
+                {{/if}}
+        </div>
+    {{/each}}
+{{/if}}
