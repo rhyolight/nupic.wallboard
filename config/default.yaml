@@ -64,3 +64,6 @@
       type: "pr_report"
       refresh_rate: 300
 
+  github:
+    username: "USERNAME"
+    password: "PASSWORD"

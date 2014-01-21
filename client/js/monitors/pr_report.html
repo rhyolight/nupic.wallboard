@@ -70,11 +70,16 @@
 .pull-request .pending {
     background-color: #ccc;
 }
+.pull-request tr.labels td {
+    padding-bottom:5px;
+    text-align:left;
+}
 .pull-request .milestone {
     text-align: right;
     font-weight: bold;
 }
 </style>
+
 <h3>nupic <a target="_blank" href="https://github.com/numenta/nupic/pulls">open pull requests</a> <small>{{open}} open, {{overdue}} overdue</h3>
 {{#if status}}
     <div class="error">There was a problem retrieving PRs from the tooling server. This is usually because of Github API rate limits.</div>
@@ -101,6 +106,15 @@
                         <a href="http://issues.numenta.org:8081/shaStatus?repo=numenta/nupic&sha={{head.sha}}" target="_blank" title="See all statuses for this SHA">Status history (JSON)</a>
                     </td>
                 </tr>
+                {{#if labels}}
+                <tr class="labels">
+                    <td colspan="3">
+                    {{#labels}}
+                        <span class="label" style="background-color:#{{color}};">{{name}}</span>
+                    {{/labels}}
+                    </td>
+                </tr>
+                {{/if}}
                 </tbody></table>
                 <div class="status {{latest_status.state}}">{{latest_status.description}}</div>
                 <div class="body">{{body}}</div>
