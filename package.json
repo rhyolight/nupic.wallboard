@@ -20,7 +20,8 @@
         "travis-ci":  "1.1.1",
         "yaml":       "0.2.3",
         "config":     "0.4.33",
-        "underscore": "1.5.2"
+        "underscore": "1.5.2",
+        "github":     "~0.1.0"
     },
     "engines": {
         "node": "0.10.x"

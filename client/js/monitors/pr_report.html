@@ -70,9 +70,13 @@
 .pull-request .pending {
     background-color: #ccc;
 }
+.pull-request tr.labels td {
+    padding-bottom:5px;
+    text-align:left;
+}
 </style>
 <h3>nupic <a target="_blank" href="https://github.com/numenta/nupic/pulls">open pull requests</a> <small>{{open}} open, {{overdue}} overdue</h3>
-{{#each prs}}
+{{#prs}}
     {{#if overdue}}
         <div class="pull-request overdue">
     {{else}}
@@ -94,8 +98,17 @@
                     <a href="http://issues.numenta.org:8081/shaStatus?repo=numenta/nupic&sha={{head.sha}}" target="_blank" title="See all statuses for this SHA">Status history (JSON)</a>
                 </td>
             </tr>
+            {{#if labels}}
+            <tr class="labels">
+                <td colspan="3">
+                {{#labels}}
+                    <span class="label" style="background-color:#{{color}};">{{name}}</span>
+                {{/labels}}
+                </td>
+            </tr>
+            {{/if}}
             </tbody></table>
             <div class="status {{latest_status.state}}">{{latest_status.description}}</div>
             <div class="body">{{body}}</div>
     </div>
-{{/each}}
+{{/prs}}

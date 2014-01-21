@@ -62,3 +62,7 @@
 
     nupic_pr_report:
       type: "pr_report"
+
+  github:
+    username: "USERNAME"
+    password: "PASSWORD"
