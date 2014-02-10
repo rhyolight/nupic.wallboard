@@ -140,17 +140,14 @@ $(function() {
 
     function setOverallStatus(good) {
         var $statusList;
-        if (good) {
-            $overallStatus.addClass('hidden');
-        } else {
-            $statusList = $('<ul>');
+        if (!good) {
+            $statusList = $('<div>');
             _.each(monitorStatus, function(status, monitorId) {
                 if (statusFails(status)) {
-                    $statusList.append('<li>' + monitorId + ': ' + status + '</li>');
+                    $statusList.append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>' + monitorId + ': ' + status + '</div>');
                 }
             });
             $overallStatus.html($statusList)
-                .removeClass('hidden');
         }
     }
 
