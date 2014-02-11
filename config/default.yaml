@@ -74,11 +74,17 @@
         name: "numenta.org"
         url: "http://numenta.org"
 
-    doc_build_status:
+    nupic_doc_build_status:
       type: "doxygen_build"
       options:
         name: "nupic"
-        url: "http://numenta.org/docs/"
+        url: "http://numenta.org/docs/nupic"
+
+    nupic_core_doc_build_status:
+      type: "doxygen_build"
+      options:
+        name: "nupic.core"
+        url: "http://numenta.org/docs/nupic.core"
 
     nupic_pr_report:
       type: "pr_report"
