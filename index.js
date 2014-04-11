@@ -5,6 +5,7 @@ var _ = require('underscore')
   , CONFIG =  require('config')
   , PORT = process.env.PORT || CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
+  , issueHandler = require('./server/issueHandler')
   , requestProxy = require('./server/requestProxy')
   ;
 
@@ -42,6 +43,9 @@ function startServer() {
     _.each(ajaxHandlers, function(handler, path) {
         app.get(path, handler);
     });
+
+    // Handles requests for issue reports across all repos.
+    app.get('/issues', issueHandler);
 
     app.listen(PORT, function() {
         console.log('nupic.wallboard server running on\n'
