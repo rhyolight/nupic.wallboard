@@ -21,10 +21,10 @@
         "yaml":       "0.2.3",
         "config":     "0.4.33",
         "underscore": "1.5.2",
+        "sprinter":   "0.0.11",
         "github":     "~0.1.0"
     },
     "engines": {
         "node": "0.10.x"
     }
 }
-
