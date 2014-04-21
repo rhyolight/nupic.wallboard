@@ -89,7 +89,10 @@ $(function() {
     }());
 
     var loadedTemplates = []
+      , $body = $('body')
+      , $overallStatus = $('#overall-status')
       , $monitors = $('#monitors')
+      , monitorStatus = {}
       , monitorWrapTopTmpl = Handlebars.compile('<div class="monitor {{namespace}}" id="{{id}}">')
       , monitorWrapTopTmplNoId = Handlebars.compile('<div class="monitor {{namespace}}">')
       , monitorWrapBottom = '</div>'
@@ -122,6 +125,44 @@ $(function() {
                 console.error('failed loading ' + namespace + ' script');
                 callback(err);
             });
+    }
+
+    function statusFails(status) {
+        return (! _.contains(['info', 'good', 'up', 'success'], status));
+    }
+
+    function allMonitorStatusesPass(statuses) {
+        return statuses.reduce(function(prev, curr) {
+            var currentIsPassing = ! statusFails(curr);
+            return prev && currentIsPassing; 
+        }, true);
+    }
+
+    function setOverallStatus(good) {
+        var $statusList;
+        if (!good) {
+            $statusList = $('<div>');
+            _.each(monitorStatus, function(status, monitorId) {
+                if (statusFails(status)) {
+                    $statusList.append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>' + monitorId + ': ' + status + '</div>');
+                }
+            });
+            $overallStatus.html($statusList)
+        }
+    }
+
+    function reportMonitorStatus(monitor, status) {
+        if (status != undefined) {
+            console.log(monitor + ' reports ' + status);
+            if (status != monitorStatus[monitor]) {
+                monitorStatus[monitor] = status;
+                if (statusFails(status)) {
+                    setOverallStatus(false);
+                }
+            } else if (allMonitorStatusesPass(_.values(monitorStatus))) {
+                setOverallStatus(true);
+            }
+        }
     }
 
     $.get('/_listMonitors', function(monitors) {
@@ -159,6 +200,7 @@ $(function() {
                             namespace: namespace
                         }) + template(data) + monitorWrapBottom
                         $('#' + monitorId).html(renderedHtml);
+                        reportMonitorStatus(monitorId, data.status);
                     }
                   ;
                 if (! $monitorEl.length) {
@@ -172,7 +214,6 @@ $(function() {
                 WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
                 if (monitorConfig.refresh_rate) {
                     setInterval(function() {
-                        console.log('refreshing ' + monitorId);
                         WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
                     }, monitorConfig.refresh_rate * 1000);
                 }

@@ -3,7 +3,7 @@
     port: 8080
 
   layout: 'nupic'
-  refresh_rate: 30
+  refresh_rate: 180
 
   monitors: 
 
@@ -39,6 +39,26 @@
         organization: "numenta"
         repository: "nupic"
 
+    nupic_core_travis_latest:
+      type: "travis_latest"
+      options: 
+        organization: "numenta"
+        repository: "nupic.core"
+
+    nupic_core_travis_builds:
+      type: "travis_builds"
+      options:
+        pull_requests: false
+        organization: "numenta"
+        repository: "nupic.core"
+
+    nupic_core_travis_pr_builds: 
+      type: "travis_builds"
+      options:
+        pull_requests: true
+        organization: "numenta"
+        repository: "nupic.core"
+
     github_status:
       type: "github_status"
 
@@ -54,11 +74,22 @@
         name: "numenta.org"
         url: "http://numenta.org"
 
-    doc_build_status:
+    nupic_doc_build_status:
       type: "doxygen_build"
       options:
         name: "nupic"
-        url: "http://numenta.org/docs/"
+        url: "http://numenta.org/docs/nupic"
+
+    nupic_core_doc_build_status:
+      type: "doxygen_build"
+      options:
+        name: "nupic.core"
+        url: "http://numenta.org/docs/nupic.core"
 
     nupic_pr_report:
       type: "pr_report"
+      refresh_rate: 600
+
+  github:
+    username: "USERNAME"
+    password: "PASSWORD"

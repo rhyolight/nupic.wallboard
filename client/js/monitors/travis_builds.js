@@ -9,6 +9,11 @@ $(function() {
             }
           ;
         server.get('history', slug, function(responseData) {
+            var commits = {};
+            _.each(responseData.commits, function(commit){
+                commit.committed_at = WB.utils.formatDate(commit.committed_at);
+                commits[commit.id] = commit;
+            });
             var history = $.extend({pr: false}, slug, responseData);
             // Sort by build date descending
             history.builds = _.sortBy(history.builds, function(build) {
@@ -17,6 +22,9 @@ $(function() {
             _.each(history.builds, function(build) {
                 build.status = WB.utils.travisStateToStatus(build.state);
                 build.started_at = WB.utils.formatDate(build.started_at);
+                build.finished_at = WB.utils.formatDate(build.finished_at);
+                build.duration = WB.utils.secondsToDurationString(build.duration);
+                build.commit = commits[build.commit_id];
             });
             if (config.pull_requests) {
                 history.pr = true;

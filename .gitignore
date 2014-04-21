@@ -1,4 +1,8 @@
 *.DS_Store
 node_modules
 config/runtime.json
+# This HTML file is generated
 client/index.html
+*.sublime-project
+*.sublime-workspace
+*.log

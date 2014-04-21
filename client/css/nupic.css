@@ -1,23 +1,22 @@
-h1 {
-  width: 100%;
-}
+
 table#status, table#dev {
   width: 100%;
 }
+div.error {
+  background-color: #f2dede;
+}
 .etabs { 
-  margin: 3px 0 0 5px;
   padding: 0;
   border-bottom: solid 1px #DDD;
 }
 .tab { 
-  display: inline-block; zoom:1; 
-  *display:inline; 
+  display: inline-block; zoom:1;
   background: #eee; 
   border: solid 1px #CCC; 
   border-bottom: none; 
 }
 .tab a { 
-  font-size: 14px; 
+  font-size:14px;
   line-height: 2em; 
   display: block; 
   padding: 0 10px; 
@@ -27,11 +26,11 @@ table#status, table#dev {
   text-decoration: underline; 
 }
 .tab.active { 
-  background: #fff; 
-  padding-top: 6px; 
-  position: relative; 
-  top: 1px; 
-  border-color: #EEE; 
+  background: #fff;
+  padding-top: 6px;
+  position: relative;
+  top: 1px;
+  border-color: #ccc;
 }
 .tab a.active { font-weight: bold; }
 .tab-container .panel-container { 
@@ -41,4 +40,25 @@ table#status, table#dev {
 }
 .right {
   text-align: right !important;
+}
+.hidden {
+  display: none;
+}
+.server-status {
+  float:right;
+}
+.popover {
+  max-width:500px;
+}
+
+.monitor h3 {
+  line-height:1.2em;
+}
+
+.travis {
+  margin-left:10px;
+}
+
+.travis img {
+  vertical-align:top;
 }
