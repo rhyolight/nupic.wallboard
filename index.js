@@ -9,14 +9,14 @@ var _ = require('underscore')
   , requestProxy = require('./server/requestProxy')
   ;
 
-function writeIndexHtml() {
-    var layout = 'default'
-     ,  html;
-    if (CONFIG.layout) {
+
+function writeHtmlTemplate(name, layout) {
+    var html;
+    if (! layout && CONFIG.layout) {
         layout = CONFIG.layout;
     }
     html = fs.readFileSync(path.join(__dirname, 'layouts', layout + '.html'));
-    fs.writeFileSync(path.join(__dirname, 'client', 'index.html'), html);
+    fs.writeFileSync(path.join(__dirname, 'client', name + '.html'), html);
 }
 
 function normalizeConfig(cfg) {
@@ -45,7 +45,7 @@ function startServer() {
     });
 
     // Handles requests for issue reports across all repos.
-    app.get('/issues', issueHandler);
+    app.get('/_issues', issueHandler);
 
     app.listen(PORT, function() {
         console.log('nupic.wallboard server running on\n'
@@ -54,5 +54,6 @@ function startServer() {
 }
 
 normalizeConfig(CONFIG);
-writeIndexHtml();
+writeHtmlTemplate('index', 'nupic');
+writeHtmlTemplate('issues', 'issues');
 startServer();
