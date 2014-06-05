@@ -60,4 +60,5 @@ function startServer() {
 normalizeConfig(CONFIG);
 writeHtmlTemplate('index', 'nupic');
 writeHtmlTemplate('issues', 'issues');
+writeHtmlTemplate('builds', 'builds');
 startServer();

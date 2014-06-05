@@ -12,7 +12,7 @@ $(function() {
             },
             failure: callback
         });
-    };
+    }
 
     function convertIssuesToTemplateData(issues) {
         var dataOut = {
@@ -20,8 +20,7 @@ $(function() {
           }
           , backlog = undefined;
         _.each(issues, function(repos, milestoneName) {
-            var repoList = []
-              , payload = undefined;
+            var repoList = [];
             _.each(repos, function(issues, repoName) {
                 repoList.push({name: repoName, issues: issues});
             });
@@ -39,9 +38,7 @@ $(function() {
     }
 
     function renderIssues(templateId, issues) {
-        console.log(issues);
         var data = convertIssuesToTemplateData(issues);
-        console.log(data);
         template = Handlebars.compile($('#' + templateId).html())
         $('#' + issuesDivId).html(template(data));
     }
@@ -50,7 +47,6 @@ $(function() {
         if (err) {
             return console.log(err);
         }
-        console.log(templId + ' template loaded');
         $.getJSON('/_issues/', function(issues) {
             renderIssues(templId, issues);
         });
