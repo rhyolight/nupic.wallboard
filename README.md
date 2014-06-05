@@ -13,8 +13,6 @@ You must have Github credentials for API calls set as environment variables.
     export GH_USERNAME=<username>
     export GH_PASSWORD=<password>
 
-Otherwise, the "/issues" URL will not work.
-
 ## Architecture
 
 The `server` folder contains the JavaScript code that runs on the Node.js server. The `client` folder contains the JavaScript code that runs in the browser. 

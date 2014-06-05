@@ -28,6 +28,10 @@ function normalizeConfig(cfg) {
             }
         });
     }
+    cfg.github = {
+        username: process.env.GH_USERNAME
+      , password: process.env.GH_PASSWORD
+    };
 }
 
 function startServer() {
