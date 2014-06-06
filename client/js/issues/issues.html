@@ -1,3 +1,17 @@
+<style>
+    ul.labels {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+    .labels li {
+        display: inline;
+        padding-bottom:5px;
+        text-align:left;
+        display: inline;
+    }
+</style>
+
 {{#each milestones}}
     <h2>{{name}}</h2>
     {{#each repos}}
@@ -8,7 +22,17 @@
             {{else}}
             <li>
                 <div class="issue">
-                    <h4><a href="{{html_url}}">{{title}}</a></h4>
+                    <h4><a href="{{html_url}}">{{title}}</a>
+                    </h4>
+                    {{#if labels}}
+                    <ul class="labels">
+                        <li>
+                            {{#labels}}
+                            <span class="label" style="background-color:#{{color}};">{{name}}</span>
+                            {{/labels}}
+                        </li>
+                    </ul>
+                    {{/if}}
                     <!--<p class="description">{{body}}</p>-->
                 </div>
             </li>
