@@ -23,8 +23,11 @@ $(function() {
     }
 
     function renderBuilds(templateId, builds) {
-        console.log(builds);
+        var doomed = [];
         _.each(builds, function(repoBuilds, repoName) {
+            if (! repoBuilds.length) {
+                doomed.push(repoName);
+            }
             _.each(repoBuilds, function(build) {
                 if (build.started_at) {
                     build.started_ago = moment(build.started_at).from(new Date());
@@ -36,6 +39,9 @@ $(function() {
                     build.pr_url = buildPullRequestUrl('numenta/' + repoName, build.pull_request_number);
                 }
             });
+        });
+        _.each(doomed, function(repoToRemove) {
+            delete builds[repoToRemove];
         });
         template = Handlebars.compile($('#' + templateId).html())
         $('#' + buildsDivId).html(template({builds: builds}));
