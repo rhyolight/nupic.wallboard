@@ -4,12 +4,15 @@
         <h3>{{name}}</h3>
         <ul>
         {{#each issues}}
+            {{#if pull_request}}
+            {{else}}
             <li>
                 <div class="issue">
                     <h4><a href="{{html_url}}">{{title}}</a></h4>
                     <p class="description">{{body}}</p>
                 </div>
             </li>
+            {{/if}}
         {{/each}}
         </ul>
     {{/each}}

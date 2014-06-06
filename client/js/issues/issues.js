@@ -39,7 +39,7 @@ $(function() {
 
     function renderIssues(templateId, issues) {
         var data = convertIssuesToTemplateData(issues);
-        template = Handlebars.compile($('#' + templateId).html())
+        template = Handlebars.compile($('#' + templateId).html());
         $('#' + issuesDivId).html(template(data));
     }
 
