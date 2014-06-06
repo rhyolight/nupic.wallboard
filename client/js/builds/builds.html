@@ -2,15 +2,17 @@
 
     <h2>{{@key}}</h2>
 
+    <ul>
     {{#each this}}
-        <div>
-            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> started {{started_ago}}.</p>
+        <li>
+            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> {{state}} {{started_ago}}.</p>
             {{# if pull_request}}
                 <blockquote>
                     PR: <a href="{{pr_url}}" target="_blank">{{pull_request_title}}</a>
                 </blockquote>
             {{/if}}
-        </div>
+        </li>
     {{/each}}
+    </ul>
 
 {{/each}}

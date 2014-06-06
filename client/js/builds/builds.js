@@ -26,7 +26,11 @@ $(function() {
         console.log(builds);
         _.each(builds, function(repoBuilds, repoName) {
             _.each(repoBuilds, function(build) {
-                build.started_ago = moment(build.started_at).from(new Date());
+                if (build.started_at) {
+                    build.started_ago = moment(build.started_at).from(new Date());
+                } else {
+                    build.started_ago = '';
+                }
                 build.html_url = buildTravisUrl('numenta/' + repoName, build.id);
                 if (build.pull_request) {
                     build.pr_url = buildPullRequestUrl('numenta/' + repoName, build.pull_request_number);
