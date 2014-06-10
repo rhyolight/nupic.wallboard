@@ -1,0 +1,24 @@
+<style>
+    ul.name-count {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        font-size: 14pt;
+    }
+    ul.name-count li {
+        padding-bottom:5px;
+        text-align:left;
+    }
+    ul.name-count li.selected {
+        font-weight: bold;
+    }
+</style>
+
+<h3>{{title}}</h3>
+<ul class="name-count">
+{{#each items}}
+    <li class="{{cssName}}">
+        <span><a href="#{{../type}}={{name}}">{{name}}</a> ({{count}})</span>
+    </li>
+{{/each}}
+</ul>

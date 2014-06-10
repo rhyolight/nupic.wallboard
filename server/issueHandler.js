@@ -3,18 +3,15 @@ var _ = require('underscore')
   , ghPassword = process.env.GH_PASSWORD
   , Sprinter = require('sprinter')
   , repos = ['numenta/nupic'
-//         , 'numenta/nupic.cerebro'
-//         , 'numenta/nupic.documents'
          , 'numenta/nupic.core'
-//         , 'numenta/nupic.fluent'
-//         , 'numenta/nupic.fluent.server'
+         , 'numenta/nupic.fluent'
+         , 'numenta/nupic.fluent.server'
          , 'numenta/nupic-linux64'
          , 'numenta/nupic-darwin64'
-//         , 'numenta/pycept'
+         , 'numenta/pycept'
          , 'numenta/nupic.tools'
          , 'numenta/nupic.wallboard'
          , 'numenta/numenta.org'
-//         , 'rhyolight/sprinter.js'
         ]
   , sprinter = new Sprinter(ghUsername, ghPassword, repos)
   ;
