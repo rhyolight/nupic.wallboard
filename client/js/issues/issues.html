@@ -8,7 +8,6 @@
         display: inline;
         padding-bottom:5px;
         text-align:left;
-        display: inline;
     }
 </style>
 
@@ -23,9 +22,9 @@
             {{else}}
 
                 {{#if assignee}}
-                <li class="issue all {{assignee.login}}">
+                <li class="{{../../../cssName}} issue all {{assignee.login}}">
                 {{else }}
-                <li class="issue all unassigned">
+                <li class="{{../../../cssName}} issue all unassigned">
                 {{/if}}
                     <div class="issue">
                         <h4>

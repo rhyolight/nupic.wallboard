@@ -1,0 +1,17 @@
+body {
+    margin: 20px;
+}
+
+#assignees-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+}
+
+#repos-container {
+    position: absolute;
+    top: 20px;
+    right: 220px;
+    width: 200px;
+}
