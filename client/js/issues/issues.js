@@ -1,8 +1,8 @@
 $(function() {
 
-    var issuesDivId = 'issues-container'
-      , assigneesDivId = 'assignees-container'
-      , reposDivId = 'repos-container'
+    var $issues = $('#issues-container')
+      , $assignees = $('#assignees-container')
+      , $repos = $('#repos-container')
       ;
 
     function getParams(hash) {
@@ -74,22 +74,25 @@ $(function() {
         _.each(issues, function(repos) {
             _.each(repos, function(issues) {
                 _.each(issues, function(issue) {
-                    if (issue.assignee) {
-                        var name = issue.assignee.login
-                          , assignee = _.find(assignees, function(a) { return a.name == name; });
-                        if (! assignee) {
-                            assignees.push({
-                                name: name,
-                                cssName: name,
-                                count: 1
-                            });
+                    // Ignore pull requests.
+                    if (! issue.pull_request) {
+                        if (issue.assignee) {
+                            var name = issue.assignee.login
+                                , assignee = _.find(assignees, function(a) { return a.name == name; });
+                            if (! assignee) {
+                                assignees.push({
+                                    name: name,
+                                    cssName: name,
+                                    count: 1
+                                });
+                            } else {
+                                assignee.count++;
+                            }
                         } else {
-                            assignee.count++;
+                            unassigned.count++;
                         }
-                    } else {
-                        unassigned.count++;
+                        all.count++;
                     }
-                    all.count++;
                 });
             });
         });
@@ -144,15 +147,15 @@ $(function() {
         repository = repoCssName;
 
         // Hide all initially.
-        $('ul.issues li.issue').hide();
+        $issues.find('li.issue').hide();
         // Remove any selections on assignees and repositories
-        $('#assignees-container ul.name-count li').removeClass('selected');
-        $('#repos-container ul.name-count li').removeClass('selected');
+        $assignees.find('ul.name-count li').removeClass('selected');
+        $repos.find('ul.name-count li').removeClass('selected');
 
-        $('li.issue.' + assignee + '.' + repoCssName).show();
+        $issues.find('li.issue.' + assignee + '.' + repoCssName).show();
 
-        $('#assignees-container ul.name-count li.' + assignee).addClass('selected');
-        $('#repos-container ul.name-count li.' + repoCssName).addClass('selected');
+        $assignees.find('ul.name-count li.' + assignee).addClass('selected');
+        $repos.find('ul.name-count li.' + repoCssName).addClass('selected');
 
         $('#assignees-container ul.name-count li a, #repos-container ul.name-count li a').each(function() {
             var pieces = this.href.split('#');
@@ -162,11 +165,11 @@ $(function() {
     }
 
     function addFilterClickHandling() {
-        $('#assignees-container ul.name-count li').click(function(event) {
+        $assignees.find('ul.name-count li').click(function(event) {
             var hashQuery = getParams(window.location.hash);
             filterBy(event.currentTarget.className, hashQuery.repo);
         });
-        $('#repos-container ul.name-count li').click(function(event) {
+        $repos.find('ul.name-count li').click(function(event) {
             var hashQuery = getParams(window.location.hash);
             filterBy(hashQuery.assignee, event.currentTarget.className);
         });
@@ -174,17 +177,17 @@ $(function() {
 
     function renderIssues(issuesTemplate, issues) {
         template = Handlebars.compile($('#' + issuesTemplate).html());
-        $('#' + issuesDivId).html(template(issues));
+        $issues.html(template(issues));
     }
 
     function renderAssignees(assigneesTemplate, assignees) {
         template = Handlebars.compile($('#' + assigneesTemplate).html());
-        $('#' + assigneesDivId).html(template(assignees));
+        $assignees.html(template(assignees));
     }
 
     function renderRepos(reposTemplate, repos) {
         template = Handlebars.compile($('#' + reposTemplate).html());
-        $('#' + reposDivId).html(template(repos));
+        $repos.html(template(repos));
     }
 
     function renderAll(issuesTemplate, nameCountTemplate, issues) {
