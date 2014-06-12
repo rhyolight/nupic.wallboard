@@ -15,3 +15,9 @@ body {
     right: 220px;
     width: 200px;
 }
+#milestones-container {
+    position: absolute;
+    top: 20px;
+    right: 420px;
+    width: 200px;
+}

@@ -12,42 +12,44 @@
 </style>
 
 {{#each milestones}}
-    <h2>{{name}}</h2>
-    {{#each repos}}
-        <h3>{{name}}</h3>
-        <ul class="issues">
-        {{#each issues}}
-            {{#if pull_request}}
+    <div class="milestone all {{cssName}}">
+        <h2>{{name}}</h2>
+        {{#each repos}}
+            <h3>{{name}}</h3>
+            <ul class="issues">
+            {{#each issues}}
+                {{#if pull_request}}
 
-            {{else}}
+                {{else}}
 
-                {{#if assignee}}
-                <li class="{{../../../cssName}} issue all {{assignee.login}}">
-                {{else }}
-                <li class="{{../../../cssName}} issue all unassigned">
-                {{/if}}
-                    <div class="issue">
-                        <h4>
-                            <a href="{{html_url}}">{{title}}</a>
-                            {{#if assignee}}
-                            ({{assignee.login}})
+                    {{#if assignee}}
+                    <li class="{{../../../cssName}} issue all {{assignee.login}}">
+                    {{else }}
+                    <li class="{{../../../cssName}} issue all unassigned">
+                    {{/if}}
+                        <div class="issue">
+                            <h4>
+                                <a href="{{html_url}}">{{title}}</a>
+                                {{#if assignee}}
+                                ({{assignee.login}})
+                                {{/if}}
+                            </h4>
+                            {{#if labels}}
+                            <ul class="labels">
+                                <li>
+                                    {{#labels}}
+                                    <span class="label" style="background-color:#{{color}};">{{name}}</span>
+                                    {{/labels}}
+                                </li>
+                            </ul>
                             {{/if}}
-                        </h4>
-                        {{#if labels}}
-                        <ul class="labels">
-                            <li>
-                                {{#labels}}
-                                <span class="label" style="background-color:#{{color}};">{{name}}</span>
-                                {{/labels}}
-                            </li>
-                        </ul>
-                        {{/if}}
-                        <!--<p class="description">{{body}}</p>-->
-                    </div>
-                </li>
-            {{/if}}
+                            <!--<p class="description">{{body}}</p>-->
+                        </div>
+                    </li>
+                {{/if}}
 
+            {{/each}}
+            </ul>
         {{/each}}
-        </ul>
-    {{/each}}
+    </div>
 {{/each}}
