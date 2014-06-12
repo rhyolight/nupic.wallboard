@@ -44,7 +44,7 @@ function splitRepo(issues) {
 }
 
 function listIssues(req, res) {
-    sprinter.getIssues(function(err, issues) {
+    sprinter.getIssues({sort: 'updated'}, function(err, issues) {
         if (err) throw(err);
         var byMilestone = splitMilestones(issues);
         var milestoneNames = _.keys(byMilestone);
