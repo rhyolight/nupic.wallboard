@@ -5,11 +5,14 @@
     <ul>
     {{#each this}}
         <li>
-            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> {{state}}{{started_ago}} for <a target="_blank" href="{{commit.compare_url}}">{{commit.sha}}</a>.</p>
             {{# if pull_request}}
+                <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> {{state}}<strong>{{started_ago}}</strong> for <strong>Pull Request</strong>:</p>
                 <blockquote>
-                    Pull Request: {{pull_request_title}}
+                    <a target="_blank" href="{{pr_url}}">{{pull_request_title}}</a>
                 </blockquote>
+            {{else}}
+                <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> {{state}}{{started_ago}} for commit <strong>{{commit.sha}}</strong>.</p>
+                <blockquote><a target="_blank" href="{{commit.compare_url}}">{{commit.message}}</a></blockquote>
             {{/if}}
 
         </li>
