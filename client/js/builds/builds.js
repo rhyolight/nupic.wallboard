@@ -29,8 +29,9 @@ $(function() {
                 doomed.push(repoName);
             }
             _.each(repoBuilds, function(build) {
+                console.log(build);
                 if (build.started_at) {
-                    build.started_ago = moment(build.started_at).from(new Date());
+                    build.started_ago = ' ' + moment(build.started_at).from(new Date());
                 } else {
                     build.started_ago = '';
                 }

@@ -5,12 +5,13 @@
     <ul>
     {{#each this}}
         <li>
-            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> {{state}} {{started_ago}}.</p>
+            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> {{state}}{{started_ago}} for <a target="_blank" href="{{commit.compare_url}}">{{commit.sha}}</a>.</p>
             {{# if pull_request}}
                 <blockquote>
-                    PR: <a href="{{pr_url}}" target="_blank">{{pull_request_title}}</a>
+                    Pull Request: {{pull_request_title}}
                 </blockquote>
             {{/if}}
+
         </li>
     {{/each}}
     </ul>
