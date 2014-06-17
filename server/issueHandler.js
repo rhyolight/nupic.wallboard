@@ -13,7 +13,7 @@ var _ = require('underscore')
          , 'numenta/nupic.wallboard'
          , 'numenta/numenta.org'
          , 'numenta/nupic.regression'
-         , 'rhyolight/sprinter'
+         , 'rhyolight/sprinter.js'
          , 'rhyolight/travis-foreman'
         ]
   , sprinter = new Sprinter(ghUsername, ghPassword, repos)
