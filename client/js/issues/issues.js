@@ -264,7 +264,7 @@ $(function() {
         renderRepos(nameCountTemplate, repos);
         renderMilestones(nameCountTemplate, milestones);
         addFilterClickHandling();
-        filterBy(hashQuery.assignee, hashQuery.repo);
+        filterBy(hashQuery.assignee, hashQuery.repo, hashQuery.milestone);
     }
 
     loadTemplate('/js/issues/issues.html', 'issues', function(err, issuesTemplate) {
