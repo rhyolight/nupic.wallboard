@@ -2,22 +2,36 @@ body {
     margin: 20px;
 }
 
-#assignees-container {
+#assignee-filter {
     position: absolute;
     top: 20px;
     right: 20px;
     width: 200px;
 }
 
-#repos-container {
+#repo-filter {
     position: absolute;
     top: 20px;
     right: 220px;
     width: 200px;
 }
-#milestones-container {
+#milestone-filter {
     position: absolute;
     top: 20px;
-    right: 420px;
-    width: 200px;
+    right: 430px;
+    width: 130px;
+}
+#type-filter {
+    position: absolute;
+    top: 20px;
+    right: 570px;
+    width: 150px;
+}
+
+ul.issues li.issue {
+    list-style-image: url(../images/issue.png);
+}
+
+ul.issues li.pull_request {
+    list-style-image: url(../images/pr.png);
 }

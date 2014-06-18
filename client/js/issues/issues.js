@@ -1,9 +1,10 @@
 $(function() {
 
     var $issues = $('#issues-container')
-      , $assignees = $('#assignees-container')
-      , $repos = $('#repos-container')
-      , $milestones = $('#milestones-container')
+      , $assigneeFilter = $('#assignee-filter')
+      , $repoFilter = $('#repo-filter')
+      , $milestoneFilter = $('#milestone-filter')
+      , $typeFilter = $('#type-filter')
       ;
 
     function getParams(hash) {
@@ -43,10 +44,25 @@ $(function() {
         _.each(issues, function(repos, milestoneName) {
             var repoList = [];
             _.each(repos, function(issues, repoName) {
+                var cssName = repoName.split('/').pop().replace(/\./g, '-')
+                  , convertedIssues = _.map(issues, function(issue) {
+                      issue.cssClass = cssName + ' all ';
+                      if (issue.assignee) {
+                          issue.cssClass += issue.assignee.login;
+                      } else {
+                          issue.cssClass += 'unassigned';
+                      }
+                      if (issue.pull_request) {
+                          issue.cssClass += ' pull_request';
+                      } else {
+                          issue.cssClass += ' issue';
+                      }
+                      return issue;
+                  });
                 repoList.push({
                     name: repoName.split('/').pop()
-                  , issues: issues
-                  , cssName: repoName.split('/').pop().replace(/\./g, '-')
+                  , issues: convertedIssues
+                  , cssName: cssName
                 });
             });
             payload = {
@@ -79,25 +95,22 @@ $(function() {
         _.each(issues, function(repos) {
             _.each(repos, function(issues) {
                 _.each(issues, function(issue) {
-                    // Ignore pull requests.
-                    if (! issue.pull_request) {
-                        if (issue.assignee) {
-                            var name = issue.assignee.login
-                                , assignee = _.find(assignees, function(a) { return a.name == name; });
-                            if (! assignee) {
-                                assignees.push({
-                                    name: name,
-                                    cssName: name,
-                                    count: 1
-                                });
-                            } else {
-                                assignee.count++;
-                            }
+                    if (issue.assignee) {
+                        var name = issue.assignee.login
+                            , assignee = _.find(assignees, function(a) { return a.name == name; });
+                        if (! assignee) {
+                            assignees.push({
+                                name: name,
+                                cssName: name,
+                                count: 1
+                            });
                         } else {
-                            unassigned.count++;
+                            assignee.count++;
                         }
-                        all.count++;
+                    } else {
+                        unassigned.count++;
                     }
+                    all.count++;
                 });
             });
         });
@@ -105,6 +118,39 @@ $(function() {
             items: assignees
           , title: 'Assignees'
           , type: 'assignee'
+        };
+    }
+
+    function extractIssueTypes(issues) {
+        var all = {
+            name: 'all',
+            cssName: 'all',
+            count: 0
+        }, prs = {
+            name: 'pull_requests',
+            cssName: 'pull_request',
+            count: 0
+        }, issuesOut = {
+            name: 'issues',
+            cssName: 'issue',
+            count: 0
+        }, allIssuesOut = [all, prs, issuesOut];
+        _.each(issues, function(repos) {
+            _.each(repos, function(issues) {
+                _.each(issues, function(issue) {
+                    if (issue.pull_request) {
+                        prs.count++;
+                    } else {
+                        issuesOut.count++;
+                    }
+                    all.count++;
+                });
+            });
+        });
+        return {
+            items: allIssuesOut
+            , title: 'Type'
+            , type: 'type'
         };
     }
 
@@ -173,9 +219,9 @@ $(function() {
         };
     }
 
-    function filterBy(assignee, repository, milestone) {
+    function filterBy(assignee, repository, milestone, issueType) {
         var repoCssName, milestoneCssName,
-            $milestonesContainers = $('.milestone');
+            $milestones = $('.milestone');
         if (! repository) {
             repository = 'all';
         }
@@ -185,51 +231,65 @@ $(function() {
         if (! milestone) {
             milestone = 'all';
         }
+        if (! issueType) {
+            issueType = 'all';
+        }
         repoCssName = repository.replace(/\./g, '-');
         milestoneCssName = milestone.replace(/\s+/g, '-');
         repository = repoCssName;
 
-        // Show all milestones initially.
-        $milestonesContainers.hide();
         // Hide all issues initially.
-        $issues.find('li.issue').hide();
+        $issues.find('li.issue-item').hide();
+        // Show all milestones initially.
+        $milestones.hide();
 
         // Remove any selections on current filter triggers
-        $assignees.find('ul.name-count li').removeClass('selected');
-        $repos.find('ul.name-count li').removeClass('selected');
-        $milestones.find('ul.name-count li').removeClass('selected');
-
-        // Show all issues filtered by assignee and repo name.
-        $issues.find('li.issue.' + assignee + '.' + repoCssName).show();
+        $assigneeFilter.find('ul.name-count li').removeClass('selected');
+        $repoFilter.find('ul.name-count li').removeClass('selected');
+        $milestoneFilter.find('ul.name-count li').removeClass('selected');
+        $typeFilter.find('ul.name-count li').removeClass('selected');
 
         // Show all milestones by filter.
-        $milestonesContainers.filter('div.' + milestoneCssName).show();
+        $milestones.filter('div.' + milestoneCssName).show();
+
+        // Show all issues filtered by assignee, repo name, and issue type.
+        $issues.find('li.issue-item.' + assignee + '.' + repoCssName + '.' + issueType).show();
 
         // Add selected to chosen filters.
-        $assignees.find('ul.name-count li.' + assignee).addClass('selected');
-        $repos.find('ul.name-count li.' + repoCssName).addClass('selected');
-        $milestones.find('ul.name-count li.' + milestoneCssName).addClass('selected');
+        $assigneeFilter.find('ul.name-count li.' + assignee).addClass('selected');
+        $repoFilter.find('ul.name-count li.' + repoCssName).addClass('selected');
+        $milestoneFilter.find('ul.name-count li.' + milestoneCssName).addClass('selected');
+        $typeFilter.find('ul.name-count li.' + issueType).addClass('selected');
 
         // Update href links with new filter
-        $('#assignees-container ul.name-count li a, #repos-container ul.name-count li a, #milestones-container ul.name-count li a').each(function() {
+        $('#assignee-filter ul.name-count li a, #repo-filter ul.name-count li a, #milestone-filter ul.name-count li a, #type-filter ul.name-count li a').each(function() {
             var pieces = this.href.split('#');
-            this.href = pieces[0] + '#' + $.param({assignee: assignee, repo: repository, milestone: milestone});
+            this.href = pieces[0] + '#' + $.param({
+                assignee: assignee, repo: repository, milestone: milestone, issueType: issueType
+            });
         });
 
     }
 
     function addFilterClickHandling() {
-        $assignees.find('ul.name-count li').click(function(event) {
+        function firstClass(event) {
+            return event.currentTarget.className.split(/\s+/).pop();
+        }
+        $assigneeFilter.find('ul.name-count li').click(function(event) {
             var hashQuery = getParams(window.location.hash);
-            filterBy(event.currentTarget.className, hashQuery.repo, hashQuery.milestone);
+            filterBy(firstClass(event), hashQuery.repo, hashQuery.milestone, hashQuery.issueType);
         });
-        $repos.find('ul.name-count li').click(function(event) {
+        $repoFilter.find('ul.name-count li').click(function(event) {
             var hashQuery = getParams(window.location.hash);
-            filterBy(hashQuery.assignee, event.currentTarget.className, hashQuery.milestone);
+            filterBy(hashQuery.assignee, firstClass(event), hashQuery.milestone, hashQuery.issueType);
         });
-        $milestones.find('ul.name-count li').click(function(event) {
+        $milestoneFilter.find('ul.name-count li').click(function(event) {
             var hashQuery = getParams(window.location.hash);
-            filterBy(hashQuery.assignee, hashQuery.repo, event.currentTarget.className);
+            filterBy(hashQuery.assignee, hashQuery.repo, firstClass(event), hashQuery.issueType);
+        });
+        $typeFilter.find('ul.name-count li').click(function(event) {
+            var hashQuery = getParams(window.location.hash);
+            filterBy(hashQuery.assignee, hashQuery.repo, hashQuery.milestone, firstClass(event));
         });
     }
 
@@ -238,19 +298,24 @@ $(function() {
         $issues.html(template(issues));
     }
 
-    function renderAssignees(assigneesTemplate, assignees) {
+    function renderAssigneeFilter(assigneesTemplate, assignees) {
         template = Handlebars.compile($('#' + assigneesTemplate).html());
-        $assignees.html(template(assignees));
+        $assigneeFilter.html(template(assignees));
     }
 
-    function renderRepos(reposTemplate, repos) {
+    function renderRepoFilter(reposTemplate, repos) {
         template = Handlebars.compile($('#' + reposTemplate).html());
-        $repos.html(template(repos));
+        $repoFilter.html(template(repos));
     }
 
-    function renderMilestones(milestoneTemplate, milestones) {
+    function renderMilestoneFilter(milestoneTemplate, milestones) {
         template = Handlebars.compile($('#' + milestoneTemplate).html());
-        $milestones.html(template(milestones));
+        $milestoneFilter.html(template(milestones));
+    }
+
+    function renderTypeFilter(typeTemplates, types) {
+        template = Handlebars.compile($('#' + typeTemplates).html());
+        $typeFilter.html(template(types));
     }
 
     function renderAll(issuesTemplate, nameCountTemplate, issues) {
@@ -258,13 +323,15 @@ $(function() {
           , assignees = extractAssignees(issues)
           , repos = extractRepos(issues)
           , milestones = extractMilestones(issues)
+          , types = extractIssueTypes(issues)
           , hashQuery = getParams(window.location.hash);
         renderIssues(issuesTemplate, issuesData);
-        renderAssignees(nameCountTemplate, assignees);
-        renderRepos(nameCountTemplate, repos);
-        renderMilestones(nameCountTemplate, milestones);
+        renderAssigneeFilter(nameCountTemplate, assignees);
+        renderRepoFilter(nameCountTemplate, repos);
+        renderMilestoneFilter(nameCountTemplate, milestones);
+        renderTypeFilter(nameCountTemplate, types);
         addFilterClickHandling();
-        filterBy(hashQuery.assignee, hashQuery.repo, hashQuery.milestone);
+        filterBy(hashQuery.assignee, hashQuery.repo, hashQuery.milestone, hashQuery.issueType);
     }
 
     loadTemplate('/js/issues/issues.html', 'issues', function(err, issuesTemplate) {
