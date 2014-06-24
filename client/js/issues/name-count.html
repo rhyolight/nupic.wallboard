@@ -18,7 +18,11 @@
 <ul class="name-count">
 {{#each items}}
     <li data-name="{{name}}" data-type="{{../type}}">
-        <span><a href="#{{../type}}={{name}}">{{name}}</a> ({{count}})</span>
+        <span><a href="#{{../type}}={{name}}">{{name}}</a>
+        {{#if count}}
+            ({{count}})
+        {{/if}}
+        </span>
     </li>
 {{/each}}
 </ul>

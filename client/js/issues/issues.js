@@ -89,12 +89,8 @@ $(function() {
 
     function extractAssignees(issues) {
         var all = {
-            name: 'all',
-            count: 0
-        }, unassigned = {
-            name: 'unassigned',
-            count: 0
-        }, assignees = [all, unassigned];
+            name: 'all'
+        }, assignees = [];
         _.each(issues, function(repos) {
             _.each(repos, function(issues) {
                 _.each(issues, function(issue) {
@@ -109,13 +105,12 @@ $(function() {
                         } else {
                             assignee.count++;
                         }
-                    } else {
-                        unassigned.count++;
                     }
-                    all.count++;
                 });
             });
         });
+        assignees = _.sortBy(assignees, function(a) { return a.count; }).reverse()
+        assignees.unshift(all);
         return {
             items: assignees
           , title: 'Assignees'
@@ -125,15 +120,14 @@ $(function() {
 
     function extractIssueTypes(issues) {
         var all = {
-            name: 'all',
-            count: 0
-        }, prs = {
-            name: 'pull_request',
-            count: 0
+            name: 'all'
         }, issuesOut = {
             name: 'issues',
             count: 0
-        }, allIssuesOut = [all, prs, issuesOut];
+        }, prs = {
+            name: 'pull requests',
+            count: 0
+        }, allIssuesOut = [all, issuesOut, prs];
         _.each(issues, function(repos) {
             _.each(repos, function(issues) {
                 _.each(issues, function(issue) {
@@ -155,10 +149,9 @@ $(function() {
 
     function extractRepos(issues) {
         var all = {
-                name: 'all',
-                count: 0
+                name: 'all'
             },
-            reposOut = [all];
+            reposOut = [];
         _.each(issues, function(repos) {
             _.each(repos, function(issues) {
                 _.each(issues, function(issue) {
@@ -176,6 +169,8 @@ $(function() {
                 });
             });
         });
+        reposOut = _.sortBy(reposOut, function(r) { return r.count; }).reverse()
+        reposOut.unshift(all);
         return {
             items: reposOut
             , title: 'Repositories'
@@ -186,8 +181,7 @@ $(function() {
 
     function extractMilestones(issues) {
         var all = {
-                name: 'all',
-                count: 0
+                name: 'all'
             },
             milestonesOut = [all];
         _.each(issues, function(repos, milestoneName) {
@@ -216,9 +210,8 @@ $(function() {
 
     function addFilterClickHandling() {
         function getLocalFilter(event, filterType) {
-            var filter = extractFilterFrom(window.location.hash)
-              , name = $(event.currentTarget).data('name');
-            filter[filterType] = name;
+            var filter = extractFilterFrom(window.location.hash);
+            filter[filterType] = $(event.currentTarget).data('name');
             return filter;
         }
         $assigneeFilter.find('ul.name-count li').click(function(event) {
@@ -296,11 +289,7 @@ $(function() {
         var filtered = issues.slice(0);
         if (assignee !== 'all') {
             filtered = _.filter(issues, function(issue) {
-                if (assignee == 'unassigned') {
-                    return issue.assignee == undefined;
-                } else {
-                    return issue.assignee && issue.assignee.login == assignee;
-                }
+                return issue.assignee && issue.assignee.login == assignee;
             });
         }
         return filtered;
@@ -310,7 +299,7 @@ $(function() {
         var filtered = issues.slice(0);
         if (type !== 'all') {
             filtered = _.filter(filtered, function(issue) {
-                if (type == 'pull_request') {
+                if (type == 'pull requests') {
                     return issue.pull_request;
                 } else {
                     return issue.pull_request == undefined;
@@ -325,8 +314,6 @@ $(function() {
         _.each(filter, function(val, key) {
             filter[key] = val.replace('+', ' ');
         });
-        console.log(filter);
-        console.log(issues);
             // Operate upon a deep local clone so we don't modify the top-level issues when we filter.
         var filteredIssues = $.extend(true, {}, issues);
         // Filter by milestone.
@@ -338,9 +325,7 @@ $(function() {
                     // Filter by repo.
                     if (filter.repo) {
                         _.each(repos, function(repoIssues, repo) {
-                            console.log(repo);
-                            if (repo !== ('numenta/' + filter.repo) && filter.repo !== 'all') {
-                                console.log('deleting ' + repo);
+                            if (repo.split('/').pop() !== filter.repo && filter.repo !== 'all') {
                                 delete repos[repo];
                             } else {
                                 // Filter by assignee.
@@ -353,12 +338,30 @@ $(function() {
                                 }
                             }
                         });
+                        // Remove empty repos.
+                        filteredIssues[milestone] = {};
+                        _.each(repos, function(issues, repo) {
+                            if (issues.length) {
+                                filteredIssues[milestone][repo] = issues;
+                            }
+                        });
                     }
                 }
             });
         }
-        console.log(filteredIssues);
         return filteredIssues;
+    }
+
+    function addGhostUnassigned(issues) {
+        _.each(issues, function(repos) {
+            _.each(repos, function(issues) {
+                _.each(issues, function(issue) {
+                    if (! issue.assignee) {
+                        issue.assignee = {login: 'unassigned'};
+                    }
+                });
+            });
+        });
     }
 
     function render(issues, filter) {
@@ -390,6 +393,7 @@ $(function() {
             $.getJSON('/_issues/', function(issues) {
                 // Keep this as the master copy to start fresh when filters are applied.
                 allIssues = issues;
+                addGhostUnassigned(allIssues);
                 var filter = extractFilterFrom(window.location.hash);
                 render(filterIssues(allIssues, filter), filter);
             });
