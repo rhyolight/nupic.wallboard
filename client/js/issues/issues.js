@@ -90,11 +90,9 @@ $(function() {
     function extractAssignees(issues) {
         var all = {
             name: 'all',
-            cssName: 'all',
             count: 0
         }, unassigned = {
             name: 'unassigned',
-            cssName: 'unassigned',
             count: 0
         }, assignees = [all, unassigned];
         _.each(issues, function(repos) {
@@ -106,7 +104,6 @@ $(function() {
                         if (! assignee) {
                             assignees.push({
                                 name: name,
-                                cssName: name,
                                 count: 1
                             });
                         } else {
@@ -129,15 +126,12 @@ $(function() {
     function extractIssueTypes(issues) {
         var all = {
             name: 'all',
-            cssName: 'all',
             count: 0
         }, prs = {
-            name: 'pull_requests',
-            cssName: 'pull_request',
+            name: 'pull_request',
             count: 0
         }, issuesOut = {
             name: 'issues',
-            cssName: 'issue',
             count: 0
         }, allIssuesOut = [all, prs, issuesOut];
         _.each(issues, function(repos) {
@@ -162,7 +156,6 @@ $(function() {
     function extractRepos(issues) {
         var all = {
                 name: 'all',
-                cssName: 'all',
                 count: 0
             },
             reposOut = [all];
@@ -174,7 +167,6 @@ $(function() {
                     if (! repo) {
                         reposOut.push({
                             name: repoName,
-                            cssName: repoName.replace(/\./g, '-'),
                             count: 1
                         });
                     } else {
@@ -195,7 +187,6 @@ $(function() {
     function extractMilestones(issues) {
         var all = {
                 name: 'all',
-                cssName: 'all',
                 count: 0
             },
             milestonesOut = [all];
@@ -204,7 +195,6 @@ $(function() {
             if (! milestone) {
                 milestone = {
                     name: milestoneName,
-                    cssName: milestoneName.replace(/\s+/g, '-'),
                     count: 0
                 };
             }
@@ -224,62 +214,11 @@ $(function() {
         };
     }
 
-    function filterBy(assignee, repository, milestone, issueType) {
-        var repoCssName, milestoneCssName,
-            $milestones = $('.milestone');
-        if (! repository) {
-            repository = 'all';
-        }
-        if (! assignee) {
-            assignee = 'all';
-        }
-        if (! milestone) {
-            milestone = 'all';
-        }
-        if (! issueType) {
-            issueType = 'all';
-        }
-        repoCssName = repository.replace(/\./g, '-');
-        milestoneCssName = milestone.replace(/\s+/g, '-');
-        repository = repoCssName;
-
-        // Hide all issues initially.
-        $issues.find('li.issue-item').hide();
-        // Show all milestones initially.
-        $milestones.hide();
-
-        // Remove any selections on current filter triggers
-        $assigneeFilter.find('ul.name-count li').removeClass('selected');
-        $repoFilter.find('ul.name-count li').removeClass('selected');
-        $milestoneFilter.find('ul.name-count li').removeClass('selected');
-        $typeFilter.find('ul.name-count li').removeClass('selected');
-
-        // Show all milestones by filter.
-        $milestones.filter('div.' + milestoneCssName).show();
-
-        // Show all issues filtered by assignee, repo name, and issue type.
-        $issues.find('li.issue-item.' + assignee + '.' + repoCssName + '.' + issueType).show();
-
-        // Add selected to chosen filters.
-        $assigneeFilter.find('ul.name-count li.' + assignee).addClass('selected');
-        $repoFilter.find('ul.name-count li.' + repoCssName).addClass('selected');
-        $milestoneFilter.find('ul.name-count li.' + milestoneCssName).addClass('selected');
-        $typeFilter.find('ul.name-count li.' + issueType).addClass('selected');
-
-        // Update href links with new filter
-        $('#assignee-filter ul.name-count li a, #repo-filter ul.name-count li a, #milestone-filter ul.name-count li a, #type-filter ul.name-count li a').each(function() {
-            var pieces = this.href.split('#');
-            this.href = pieces[0] + '#' + $.param({
-                assignee: assignee, repo: repository, milestone: milestone, issueType: issueType
-            });
-        });
-
-    }
-
     function addFilterClickHandling() {
         function getLocalFilter(event, filterType) {
             var filter = extractFilterFrom(window.location.hash)
-            filter[filterType] = event.currentTarget.className.split(/\s+/).pop().replace('-', '.');
+              , name = $(event.currentTarget).data('name');
+            filter[filterType] = name;
             return filter;
         }
         $assigneeFilter.find('ul.name-count li').click(function(event) {
@@ -301,9 +240,6 @@ $(function() {
     }
 
     function updateFilterLinks(filter) {
-        var repoCssName = filter.repo.replace(/\s+/g, '-')
-          , milestoneCssName = filter.milestone.replace(/\s+/g, '-')
-          ;
         // Remove any selections on current filter triggers
         $assigneeFilter.find('ul.name-count li').removeClass('selected');
         $repoFilter.find('ul.name-count li').removeClass('selected');
@@ -311,17 +247,23 @@ $(function() {
         $typeFilter.find('ul.name-count li').removeClass('selected');
 
         // Add selected to chosen filters.
-        $assigneeFilter.find('ul.name-count li.' + filter.assignee).addClass('selected');
-        $repoFilter.find('ul.name-count li.' + repoCssName).addClass('selected');
-        $milestoneFilter.find('ul.name-count li.' + milestoneCssName).addClass('selected');
-        $typeFilter.find('ul.name-count li.' + filter.type).addClass('selected');
+        $assigneeFilter.find('ul.name-count li[data-name=\'' + filter.assignee + '\']').addClass('selected');
+        $repoFilter.find('ul.name-count li[data-name=\'' + filter.repo + '\']').addClass('selected');
+        $milestoneFilter.find('ul.name-count li[data-name=\'' + filter.milestone + '\']').addClass('selected');
+        $typeFilter.find('ul.name-count li[data-name=\'' + filter.type + '\']').addClass('selected');
 
         // Update href links with new filter
-        $('#assignee-filter ul.name-count li a, #repo-filter ul.name-count li a, #milestone-filter ul.name-count li a, #type-filter ul.name-count li a').each(function() {
-            var pieces = this.href.split('#')
-              , linkFilter = extractFilterFrom('#' + pieces[1])
-              , updatedFilter = _.extend(filter, linkFilter);
-            this.href = pieces[0] + '#' + $.param(updatedFilter);
+        $('ul.name-count li').each(function() {
+            var $item = $(this)
+              , $link = $item.find('a')
+              , pieces = $link.attr('href').split('#')
+              , name = $item.data('name')
+              , type = $item.data('type')
+              , linkFilter = {}
+              , updatedFilter;
+            linkFilter[type] = name;
+            updatedFilter = _.extend({}, filter, linkFilter);
+            $link.attr('href', pieces[0] + '#' + $.param(updatedFilter));
         });
     }
 
@@ -379,9 +321,13 @@ $(function() {
     }
 
     function filterIssues(issues, filter) {
+        // Replace + with space.
+        _.each(filter, function(val, key) {
+            filter[key] = val.replace('+', ' ');
+        });
         console.log(filter);
         console.log(issues);
-        // Operate upon a deep local clone so we don't modify the top-level issues when we filter.
+            // Operate upon a deep local clone so we don't modify the top-level issues when we filter.
         var filteredIssues = $.extend(true, {}, issues);
         // Filter by milestone.
         if (filter.milestone) {
@@ -431,22 +377,6 @@ $(function() {
         updateFilterLinks(filter);
     }
 
-    function renderAll(issuesTemplate, nameCountTemplate, issues) {
-//        var issuesData = convertIssuesToTemplateData(issues)
-//          , assignees = extractAssignees(issues)
-//          , repos = extractRepos(issues)
-//          , milestones = extractMilestones(issues)
-//          , types = extractIssueTypes(issues)
-//          , hashQuery = extractFilterFrom(window.location.hash);
-//        renderIssues(issuesTemplate, issuesData);
-//        renderAssigneeFilter(nameCountTemplate, assignees);
-//        renderRepoFilter(nameCountTemplate, repos);
-//        renderMilestoneFilter(nameCountTemplate, milestones);
-//        renderTypeFilter(nameCountTemplate, types);
-//        addFilterClickHandling();
-//        filterBy(hashQuery.assignee, hashQuery.repo, hashQuery.milestone, hashQuery.issueType);
-    }
-
     loadTemplate('/js/issues/issues.html', 'issues', function(err, localIssuesTemplate) {
         if (err) {
             return console.log(err);
@@ -458,7 +388,6 @@ $(function() {
             }
             nameCountTemplate = localNameCountTemplate;
             $.getJSON('/_issues/', function(issues) {
-//                renderAll(issuesTemplate, nameCountTemplate, issues);
                 // Keep this as the master copy to start fresh when filters are applied.
                 allIssues = issues;
                 var filter = extractFilterFrom(window.location.hash);

@@ -17,7 +17,7 @@
 <h3>{{title}}</h3>
 <ul class="name-count">
 {{#each items}}
-    <li class="{{cssName}}">
+    <li data-name="{{name}}" data-type="{{../type}}">
         <span><a href="#{{../type}}={{name}}">{{name}}</a> ({{count}})</span>
     </li>
 {{/each}}
