@@ -11,6 +11,13 @@ $(function() {
       , $milestoneFilter = $('#milestone-filter')
       , $typeFilter = $('#type-filter')
       , $stateFilter = $('#state-filter')
+      , filterElements = {
+            assignee: $assigneeFilter,
+            repo: $repoFilter,
+            milestone: $milestoneFilter,
+            type: $typeFilter,
+            state: $stateFilter
+        }
       ;
 
     function extractFilterFrom(hash) {
@@ -244,42 +251,22 @@ $(function() {
             filter[filterType] = $(event.currentTarget).data('name');
             return filter;
         }
-        $assigneeFilter.find('ul.name-count li').click(function(event) {
-            var filter = getLocalFilter(event, 'assignee');
-            render(filterIssues(allIssues, filter), filter);
-        });
-        $repoFilter.find('ul.name-count li').click(function(event) {
-            var filter = getLocalFilter(event, 'repo');
-            render(filterIssues(allIssues, filter), filter);
-        });
-        $milestoneFilter.find('ul.name-count li').click(function(event) {
-            var filter = getLocalFilter(event, 'milestone');
-            render(filterIssues(allIssues, filter), filter);
-        });
-        $typeFilter.find('ul.name-count li').click(function(event) {
-            var filter = getLocalFilter(event, 'type');
-            render(filterIssues(allIssues, filter), filter);
-        });
-        $stateFilter.find('ul.name-count li').click(function(event) {
-            var filter = getLocalFilter(event, 'state');
-            render(filterIssues(allIssues, filter), filter);
+        _.each(filterElements, function($filterElement, filterType) {
+            // On filter click, filters all issues by filter type clicked.
+            $filterElement.find('ul.name-count li').click(function(event) {
+                var filter = getLocalFilter(event, filterType);
+                render(filterIssues(allIssues, filter), filter);
+            });
         });
     }
 
     function updateFilterLinks(filter) {
-        // Remove any selections on current filter triggers
-        $assigneeFilter.find('ul.name-count li').removeClass('selected');
-        $repoFilter.find('ul.name-count li').removeClass('selected');
-        $milestoneFilter.find('ul.name-count li').removeClass('selected');
-        $typeFilter.find('ul.name-count li').removeClass('selected');
-        $stateFilter.find('ul.name-count li').removeClass('selected');
-
-        // Add selected to chosen filters.
-        $assigneeFilter.find('ul.name-count li[data-name=\'' + filter.assignee + '\']').addClass('selected');
-        $repoFilter.find('ul.name-count li[data-name=\'' + filter.repo + '\']').addClass('selected');
-        $milestoneFilter.find('ul.name-count li[data-name=\'' + filter.milestone + '\']').addClass('selected');
-        $typeFilter.find('ul.name-count li[data-name=\'' + filter.type + '\']').addClass('selected');
-        $stateFilter.find('ul.name-count li[data-name=\'' + filter.state + '\']').addClass('selected');
+        _.each(filterElements, function($filterElement, filterType) {
+            // Remove any selections on current filter triggers
+            $filterElement.find('ul.name-count li').removeClass('selected');
+            // Add selected to chosen filters.
+            $filterElement.find('ul.name-count li[data-name=\'' + filter[filterType] + '\']').addClass('selected');
+        });
 
         // Update href links with new filter
         $('ul.name-count li').each(function() {
@@ -296,34 +283,9 @@ $(function() {
         });
     }
 
-    function renderIssues(issuesTemplate, issues) {
-        template = Handlebars.compile($('#' + issuesTemplate).html());
-        $issues.html(template(issues));
-    }
-
-    function renderAssigneeFilter(assigneesTemplate, assignees) {
-        template = Handlebars.compile($('#' + assigneesTemplate).html());
-        $assigneeFilter.html(template(assignees));
-    }
-
-    function renderRepoFilter(reposTemplate, repos) {
-        template = Handlebars.compile($('#' + reposTemplate).html());
-        $repoFilter.html(template(repos));
-    }
-
-    function renderMilestoneFilter(milestoneTemplate, milestones) {
-        template = Handlebars.compile($('#' + milestoneTemplate).html());
-        $milestoneFilter.html(template(milestones));
-    }
-
-    function renderTypeFilter(typeTemplate, types) {
-        template = Handlebars.compile($('#' + typeTemplate).html());
-        $typeFilter.html(template(types));
-    }
-
-    function renderStateFilter(stateTemplate, states) {
-        template = Handlebars.compile($('#' + stateTemplate).html());
-        $stateFilter.html(template(states));
+    function renderTemplate($element, templateName, data) {
+        var template = Handlebars.compile($('#' + templateName).html());
+        $element.html(template(data));
     }
 
     function filterAssignees(issues, assignee) {
@@ -427,12 +389,12 @@ $(function() {
           , types = extractIssueTypes(issues)
           , states = extractIssueStates(issues)
           ;
-        renderIssues(issuesTemplate, issuesData);
-        renderAssigneeFilter(nameCountTemplate, assignees);
-        renderRepoFilter(nameCountTemplate, repos);
-        renderMilestoneFilter(nameCountTemplate, milestones);
-        renderTypeFilter(nameCountTemplate, types);
-        renderStateFilter(nameCountTemplate, states);
+        renderTemplate($issues, issuesTemplate, issuesData);
+        renderTemplate($assigneeFilter, nameCountTemplate, assignees);
+        renderTemplate($repoFilter, nameCountTemplate, repos);
+        renderTemplate($milestoneFilter, nameCountTemplate, milestones);
+        renderTemplate($typeFilter, nameCountTemplate, types);
+        renderTemplate($stateFilter, nameCountTemplate, states);
         addFilterClickHandling();
         updateFilterLinks(filter);
     }
