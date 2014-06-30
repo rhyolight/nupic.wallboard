@@ -10,10 +10,11 @@ $(function() {
       , $repoFilter = $('#repo-filter')
       , $milestoneFilter = $('#milestone-filter')
       , $typeFilter = $('#type-filter')
+      , $stateFilter = $('#state-filter')
       ;
 
     function extractFilterFrom(hash) {
-        var params = {milestone: 'all', repo: 'all', assignee: 'all', type: 'all'}
+        var params = {milestone: 'all', repo: 'all', assignee: 'all', type: 'all', state: 'open'}
           , temp
           , items = hash.slice(1).split("&") // remove leading # and split
           , i;
@@ -47,7 +48,7 @@ $(function() {
           }
           , backlog = undefined;
         _.each(issues, function(repos, milestoneName) {
-            var repoList = [];
+            var repoList = [], payload;
             _.each(repos, function(issues, repoName) {
                 var cssName = repoName.split('/').pop().replace(/\./g, '-')
                   , convertedIssues = _.map(issues, function(issue) {
@@ -147,6 +148,35 @@ $(function() {
         };
     }
 
+    function extractIssueStates(issues) {
+        var all = {
+            name: 'all'
+        }, open = {
+            name: 'open',
+            count: 0
+        }, closed = {
+            name: 'closed',
+            count: 0
+        }, allIssuesOut = [all, open, closed];
+        _.each(issues, function(repos) {
+            _.each(repos, function(issues) {
+                _.each(issues, function(issue) {
+                    if (issue.state == 'open') {
+                        open.count++;
+                    } else {
+                        closed.count++;
+                    }
+                    all.count++;
+                });
+            });
+        });
+        return {
+            items: allIssuesOut
+            , title: 'State'
+            , type: 'state'
+        };
+    }
+
     function extractRepos(issues) {
         var all = {
                 name: 'all'
@@ -230,6 +260,10 @@ $(function() {
             var filter = getLocalFilter(event, 'type');
             render(filterIssues(allIssues, filter), filter);
         });
+        $stateFilter.find('ul.name-count li').click(function(event) {
+            var filter = getLocalFilter(event, 'state');
+            render(filterIssues(allIssues, filter), filter);
+        });
     }
 
     function updateFilterLinks(filter) {
@@ -238,12 +272,14 @@ $(function() {
         $repoFilter.find('ul.name-count li').removeClass('selected');
         $milestoneFilter.find('ul.name-count li').removeClass('selected');
         $typeFilter.find('ul.name-count li').removeClass('selected');
+        $stateFilter.find('ul.name-count li').removeClass('selected');
 
         // Add selected to chosen filters.
         $assigneeFilter.find('ul.name-count li[data-name=\'' + filter.assignee + '\']').addClass('selected');
         $repoFilter.find('ul.name-count li[data-name=\'' + filter.repo + '\']').addClass('selected');
         $milestoneFilter.find('ul.name-count li[data-name=\'' + filter.milestone + '\']').addClass('selected');
         $typeFilter.find('ul.name-count li[data-name=\'' + filter.type + '\']').addClass('selected');
+        $stateFilter.find('ul.name-count li[data-name=\'' + filter.state + '\']').addClass('selected');
 
         // Update href links with new filter
         $('ul.name-count li').each(function() {
@@ -280,9 +316,14 @@ $(function() {
         $milestoneFilter.html(template(milestones));
     }
 
-    function renderTypeFilter(typeTemplates, types) {
-        template = Handlebars.compile($('#' + typeTemplates).html());
+    function renderTypeFilter(typeTemplate, types) {
+        template = Handlebars.compile($('#' + typeTemplate).html());
         $typeFilter.html(template(types));
+    }
+
+    function renderStateFilter(stateTemplate, states) {
+        template = Handlebars.compile($('#' + stateTemplate).html());
+        $stateFilter.html(template(states));
     }
 
     function filterAssignees(issues, assignee) {
@@ -304,6 +345,16 @@ $(function() {
                 } else {
                     return issue.pull_request == undefined;
                 }
+            });
+        }
+        return filtered;
+    }
+
+    function filterStates(issues, state) {
+        var filtered = issues.slice(0);
+        if (state !== 'all') {
+            filtered = _.filter(filtered, function(issue) {
+                return state == issue.state;
             });
         }
         return filtered;
@@ -335,6 +386,10 @@ $(function() {
                                 // Filter by issue type.
                                 if (filter.type) {
                                     repos[repo] = filterTypes(repos[repo], filter.type);
+                                }
+                                // Filter by issue state.
+                                if (filter.state) {
+                                    repos[repo] = filterStates(repos[repo], filter.state);
                                 }
                             }
                         });
@@ -370,12 +425,14 @@ $(function() {
           , repos = extractRepos(issues)
           , milestones = extractMilestones(issues)
           , types = extractIssueTypes(issues)
+          , states = extractIssueStates(issues)
           ;
         renderIssues(issuesTemplate, issuesData);
         renderAssigneeFilter(nameCountTemplate, assignees);
         renderRepoFilter(nameCountTemplate, repos);
         renderMilestoneFilter(nameCountTemplate, milestones);
         renderTypeFilter(nameCountTemplate, types);
+        renderStateFilter(nameCountTemplate, states);
         addFilterClickHandling();
         updateFilterLinks(filter);
     }

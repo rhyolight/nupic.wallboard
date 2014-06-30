@@ -1,4 +1,5 @@
 var _ = require('underscore')
+  , async = require('async')
   , ghUsername = process.env.GH_USERNAME
   , ghPassword = process.env.GH_PASSWORD
   , Sprinter = require('sprinter')
@@ -47,11 +48,19 @@ function splitRepo(issues) {
 }
 
 function listIssues(req, res) {
-    sprinter.getIssues({sort: 'updated'}, function(err, issues) {
+    var issueGetters = [function(callback) {
+        sprinter.getIssues({sort: 'updated'}, callback);
+    }, function(callback) {
+        sprinter.getIssues({state: 'closed', sort: 'updated'}, callback);
+    }];
+    async.parallel(issueGetters, function(err, issues) {
         if (err) throw(err);
-        var byMilestone = splitMilestones(issues);
-        var milestoneNames = _.keys(byMilestone);
-        var byMilestoneAndRepo = {};
+        var openIssues = issues[0]
+          , closedIssues = issues[1]
+          , allIssues = openIssues.concat(closedIssues)
+          , byMilestone = splitMilestones(allIssues)
+          , milestoneNames = _.keys(byMilestone)
+          , byMilestoneAndRepo = {};
         _.each(milestoneNames, function(name) {
             byMilestoneAndRepo[name] = {};
         });
