@@ -17,6 +17,7 @@
     "dependencies": {
         "express":          "3.4.7",
         "request":          "2.29.0",
+        "async":            "0.4.0",
         "travis-ci":        "1.1.1",
         "yaml":             "0.2.3",
         "config":           "0.4.33",

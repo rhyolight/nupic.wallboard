@@ -27,11 +27,24 @@ body {
     right: 570px;
     width: 150px;
 }
+#state-filter {
+    position: absolute;
+    top: 20px;
+    right: 750px;
+    width: 130px;
+}
 
-ul.issues li.issue {
+ul.issues li.issue.open {
     list-style-image: url(../images/issue.png);
 }
 
-ul.issues li.pull_request {
+ul.issues li.pull_request.open {
     list-style-image: url(../images/pr.png);
+}
+ul.issues li.issue.closed {
+    list-style-image: url(../images/issue_closed.png);
+}
+
+ul.issues li.pull_request.closed {
+    list-style-image: url(../images/pr_closed.png);
 }
