@@ -1,11 +1,9 @@
 $(function() {
 
-    var issuesTemplate = undefined
+    var REFRESH_RATE = 3 * 60 * 1000 // 3 minutes
+      , issuesTemplate = undefined
       , nameCountTemplate = undefined
-      , allIssues = undefined
-      ;
-
-    var $issues = $('#issues-container')
+      , $issues = $('#issues-container')
       , $assigneeFilter = $('#assignee-filter')
       , $repoFilter = $('#repo-filter')
       , $milestoneFilter = $('#milestone-filter')
@@ -399,6 +397,23 @@ $(function() {
         updateFilterLinks(filter);
     }
 
+    function loadPage(loadingMessage, callback) {
+        $issues.html("<h2>" + loadingMessage + "</h2>");
+        _.each(filterElements, function($filterElement) {
+            $filterElement.html("<p>" + loadingMessage + "</p>");
+        });
+        $.getJSON('/_issues/', function(issues) {
+            // Keep this as the master copy to start fresh when filters are applied.
+            allIssues = issues;
+            addGhostUnassigned(allIssues);
+            var filter = extractFilterFrom(window.location.hash);
+            render(filterIssues(allIssues, filter), filter);
+            if (callback) {
+                callback();
+            }
+        });
+    }
+
     loadTemplate('/js/issues/issues.html', 'issues', function(err, localIssuesTemplate) {
         if (err) {
             return console.log(err);
@@ -409,12 +424,10 @@ $(function() {
                 return console.log(err);
             }
             nameCountTemplate = localNameCountTemplate;
-            $.getJSON('/_issues/', function(issues) {
-                // Keep this as the master copy to start fresh when filters are applied.
-                allIssues = issues;
-                addGhostUnassigned(allIssues);
-                var filter = extractFilterFrom(window.location.hash);
-                render(filterIssues(allIssues, filter), filter);
+            loadPage("Loading...", function() {
+                setInterval(function() {
+                    loadPage("Reloading...");
+                }, REFRESH_RATE);
             });
         });
     });
