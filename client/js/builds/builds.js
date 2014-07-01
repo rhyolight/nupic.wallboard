@@ -1,6 +1,8 @@
 $(function() {
 
-    var buildsDivId = 'build-container'
+    var REFRESH_RATE = 3 * 60 * 1000 // 3 minutes
+      , $builds = $('#build-container')
+      ;
 
     function loadTemplate(src, id, callback) {
         $.ajax({
@@ -45,16 +47,27 @@ $(function() {
             delete builds[repoToRemove];
         });
         template = Handlebars.compile($('#' + templateId).html())
-        $('#' + buildsDivId).html(template({builds: builds}));
+        $builds.html(template({builds: builds}));
+    }
+
+    function loadPage(templId, callback) {
+        $builds.html("<h2>Loading...</h2>");
+        $.getJSON('/_builds/', function(builds) {
+            renderBuilds(templId, builds);
+            if (callback) {
+                callback();
+            }
+        });
     }
 
     loadTemplate('/js/builds/builds.html', 'builds', function(err, templId) {
         if (err) {
             return console.log(err);
         }
-        console.log(templId + ' template loaded');
-        $.getJSON('/_builds/', function(builds) {
-            renderBuilds(templId, builds);
+        loadPage(templId, function() {
+            setInterval(function() {
+                loadPage(templId);
+            }, REFRESH_RATE);
         });
     });
 });
