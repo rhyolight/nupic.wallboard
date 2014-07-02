@@ -5,6 +5,7 @@ var _ = require('underscore')
   , Sprinter = require('sprinter')
   , repos = ['numenta/nupic'
          , 'numenta/nupic.core'
+         , 'numenta/nupic.geospatial'
          , 'numenta/nupic.fluent'
          , 'numenta/nupic.fluent.server'
          , 'numenta/nupic-linux64'
