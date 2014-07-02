@@ -10,6 +10,7 @@ var _ = require('underscore')
          , 'numenta/nupic.fluent.server'
          , 'numenta/nupic-linux64'
          , 'numenta/nupic-darwin64'
+         , 'numenta/NAB'
          , 'numenta/pycept'
          , 'numenta/nupic.tools'
          , 'numenta/nupic.wallboard'
