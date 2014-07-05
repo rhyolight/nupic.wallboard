@@ -9,6 +9,13 @@ h1 {
 div.error {
   background-color: #f2dede;
 }
+
+#powered-by {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
 .etabs { 
   padding: 0;
   border-bottom: solid 1px #DDD;
