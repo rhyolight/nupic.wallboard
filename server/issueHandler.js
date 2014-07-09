@@ -3,19 +3,29 @@ var _ = require('underscore')
   , ghUsername = process.env.GH_USERNAME
   , ghPassword = process.env.GH_PASSWORD
   , Sprinter = require('sprinter')
-  , repos = ['numenta/nupic'
+  , repos = [
+         // Core repos
+           'numenta/nupic'
          , 'numenta/nupic.core'
+         , 'numenta/nupic-linux64'
+         , 'numenta/nupic-darwin64'
+         // Tooling
+         , 'numenta/nupic.tools'
+         , 'numenta/nupic.wallboard'
+         , 'numenta/nupic.regression'
+         // Satellite projects
+         , 'numenta/NAB'
+         , 'numenta/numenta.org'
+         , 'numenta/nupic.documents'
+         // NuPIC Applications
          , 'numenta/nupic.geospatial'
          , 'numenta/nupic.fluent'
          , 'numenta/nupic.fluent.server'
-         , 'numenta/nupic-linux64'
-         , 'numenta/nupic-darwin64'
-         , 'numenta/NAB'
+         , 'numenta/nupic.cerebro'
+         , 'numenta/nupic.cerebro2'
+         , 'numenta/nupic.cerebro2.server'
+         // Other
          , 'numenta/pycept'
-         , 'numenta/nupic.tools'
-         , 'numenta/nupic.wallboard'
-         , 'numenta/numenta.org'
-         , 'numenta/nupic.regression'
          , 'rhyolight/sprinter.js'
          , 'rhyolight/travis-foreman'
         ]
