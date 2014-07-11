@@ -28,6 +28,7 @@ var _ = require('underscore')
          , 'numenta/pycept'
          , 'rhyolight/sprinter.js'
          , 'rhyolight/travis-foreman'
+         , 'rhyolight/nupic.critic'
         ]
   , sprinter = new Sprinter(ghUsername, ghPassword, repos)
   ;
