@@ -3,34 +3,9 @@ var _ = require('underscore')
   , ghUsername = process.env.GH_USERNAME
   , ghPassword = process.env.GH_PASSWORD
   , Sprinter = require('sprinter')
-  , repos = [
-         // Core repos
-           'numenta/nupic'
-         , 'numenta/nupic.core'
-         , 'numenta/nupic-linux64'
-         , 'numenta/nupic-darwin64'
-         // Tooling
-         , 'numenta/nupic.tools'
-         , 'numenta/nupic.wallboard'
-         , 'numenta/nupic.regression'
-         // Satellite projects
-         , 'numenta/NAB'
-         , 'numenta/numenta.org'
-         , 'numenta/nupic.documents'
-         // NuPIC Applications
-         , 'numenta/nupic.geospatial'
-         , 'numenta/nupic.fluent'
-         , 'numenta/nupic.fluent.server'
-         , 'numenta/nupic.cerebro'
-         , 'numenta/nupic.cerebro2'
-         , 'numenta/nupic.cerebro2.server'
-         // Other
-         , 'numenta/pycept'
-         , 'rhyolight/sprinter.js'
-         , 'rhyolight/travis-foreman'
-         , 'rhyolight/nupic.critic'
-        ]
-  , sprinter = new Sprinter(ghUsername, ghPassword, repos)
+  , sprinter
+  , repos
+  , config
   ;
 
 function splitMilestones(issues) {
@@ -67,7 +42,9 @@ function listIssues(req, res) {
         sprinter.getIssues({state: 'closed', sort: 'updated'}, callback);
     }];
     async.parallel(issueGetters, function(err, issues) {
-        if (err) throw(err);
+        if (err) {
+            throw(err);
+        }
         var openIssues = issues[0]
           , closedIssues = issues[1]
           , allIssues = openIssues.concat(closedIssues)
@@ -85,4 +62,11 @@ function listIssues(req, res) {
     });
 }
 
-module.exports = listIssues;
+function initializer(cfg) {
+    config = cfg;
+    repos = _.map(config.repos, function(repo) { return repo.slug; });
+    sprinter = new Sprinter(ghUsername, ghPassword, repos)
+    return listIssues;
+}
+
+module.exports = initializer;

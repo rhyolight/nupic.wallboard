@@ -1,7 +1,9 @@
-var _ = require('underscore')
-  , express = require('express')
-  , path = require('path')
+var path = require('path')
   , fs = require('fs')
+  , _ = require('underscore')
+  , request = require('request')
+  , yaml = require('js-yaml')
+  , express = require('express')
   , CONFIG =  require('config')
   , PORT = process.env.PORT || CONFIG.app.port
   , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
@@ -18,6 +20,24 @@ function writeHtmlTemplate(name, layout) {
     }
     html = fs.readFileSync(path.join(__dirname, 'layouts', layout + '.html'));
     fs.writeFileSync(path.join(__dirname, 'client', name + '.html'), html);
+}
+
+function getGlobalRepos(url, cb) {
+    console.log('Fetching global repo list from %s', url);
+    request.get(url, function(err, resp, body) {
+        var repos;
+        if (err) {
+            return cb(err);
+        }
+        try {
+            // Have to append the "---" line to the start of the YAML file or it
+            // doesn't parse properly.
+            repos = yaml.safeLoad("---\n" + body).repos;
+        } catch(e) {
+            throw new Error('Config file "' + url + '" is invalid YAML!');
+        }
+        cb(null, repos);
+    });
 }
 
 function normalizeConfig(cfg) {
@@ -50,7 +70,7 @@ function startServer() {
     });
 
     // Handles requests for issue reports across all repos.
-    app.get('/_issues', issueHandler);
+    app.get('/_issues', issueHandler(CONFIG));
 
     // Handles requests for running build reports across all repos.
     app.get('/_builds', buildHandler);
@@ -61,8 +81,14 @@ function startServer() {
         });
 }
 
-normalizeConfig(CONFIG);
-writeHtmlTemplate('index', 'nupic');
-writeHtmlTemplate('issues', 'issues');
-writeHtmlTemplate('builds', 'builds');
-startServer();
+getGlobalRepos(CONFIG.repos_url, function(err, repos) {
+    if (err) {
+        throw err;
+    }
+    CONFIG.repos = repos;
+    normalizeConfig(CONFIG);
+    writeHtmlTemplate('index', 'nupic');
+    writeHtmlTemplate('issues', 'issues');
+    writeHtmlTemplate('builds', 'builds');
+    startServer();
+});
