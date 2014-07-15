@@ -2,8 +2,9 @@
   app: 
     port: 8080
 
-  layout: 'nupic'
+  layout: "nupic"
   refresh_rate: 180
+  repos_url: "http://numenta.org/resources/repos.yaml"
 
   monitors: 
 

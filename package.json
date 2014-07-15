@@ -19,7 +19,7 @@
         "request":          "2.29.0",
         "async":            "0.4.0",
         "travis-ci":        "1.1.1",
-        "yaml":             "0.2.3",
+        "js-yaml":          "3.1.0",
         "config":           "0.4.33",
         "underscore":       "1.5.2",
         "sprinter":         "0.0.11",
