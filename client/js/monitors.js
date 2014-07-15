@@ -169,8 +169,10 @@ $(function() {
         _.each(monitors, function(monitorConfig, monitorId) {
             var scriptPath = monitorConfig.js
               , loadingHtml = '<img src="/images/ajax-loader.gif" alt="loading"/>'
-              , namespace = scriptPath.split('/').pop().split('.').shift()
-              , templatePath = scriptPath.split('.js')[0] + '.html'
+              , scriptName = scriptPath.split('/').pop()
+              , scriptDirectory = scriptPath.substr(0, scriptPath.length - scriptName.length)
+              , namespace = scriptName.split('.').shift()
+              , templatePath = scriptDirectory + '/tmpl/' + namespace + '.html'
               ;
             async.parallel([
                 function(callback) {
