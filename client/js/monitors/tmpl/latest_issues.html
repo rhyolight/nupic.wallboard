@@ -3,10 +3,10 @@
         border-collapse: collapse;
     }
     div.latest_issues table td {
-        padding: 0px 5px;
+        padding: 0 5px;
     }
-    div.latest_issues table td.updated {
-        width: 20%;
+    div.latest_issues table td.updated, div.latest_issues table td.milestone {
+        white-space: nowrap
     }
     div.latest_issues table td.user {
         text-align: right;
@@ -15,6 +15,14 @@
     div.latest_issues table td.user img {
         max-width: inherit;
         width: 40px;
+    }
+    div.latest_issues table td.icon {
+        background-color: white;
+        border: none;
+    }
+    div.latest_issues table td.icon img {
+        max-width: inherit;
+        width: 20px;
     }
     div.latest_issues table td {
         border-bottom: solid black 1px;
@@ -39,7 +47,7 @@
 <table>
     <thead>
     <tr>
-        <th colspan="2">{{title}}</th>
+        <th colspan="4">{{title}}</th>
         <th colspan="2">
             <a href="/issues.html" target="_blank">View All</a>
         </th>
@@ -48,15 +56,33 @@
     <tbody>
     {{#each issues}}
     <tr class="{{type}}">
+        <td class="icon">
+            {{#if pull_request}}
+                <img src="/images/pr.png" title="pull request"/>
+            {{else}}
+                <img src="/images/issue.png" title="issue"/>
+            {{/if}}
+        </td>
         <td class="title">
             <a href="{{html_url}}" target="_blank">
             {{title}}
             </a>
         </td>
         <td class="repo">{{repo}}</td>
+        <td class="milestone">
+            {{#if milestone}}
+                <a href="/issues.html#milestone={{milestone.title}}" target="_blank">
+                {{milestone.title}}
+                </a>
+            {{/if}}
+        </td>
         <td class="updated">{{updated}}</td>
         <td class="user">
-            <img src="{{user.avatar_url}}" title="{{user.login}}"/>
+            {{#if assignee}}
+                <img src="{{assignee.avatar_url}}" title="{{assignee.login}}"/>
+            {{else}}
+                <img src="/images/unassigned.png" title="unassigned"/>
+            {{/if}}
         </td>
     </tr>
     {{/each}}
