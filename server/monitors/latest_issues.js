@@ -1,12 +1,23 @@
-var config
-  , _ = require('underscore')
+var _ = require('underscore')
   , moment = require('moment')
   , Sprinter = require('sprinter')
   , json = require('../utils/json')
   , ghUsername = process.env.GH_USERNAME
   , ghPassword = process.env.GH_PASSWORD
   , sprinter
+  , repos
   ;
+
+function addTypes(issues) {
+    _.each(issues, function(issue) {
+        _.each(repos, function(repo) {
+            if (repo.slug == issue.repo) {
+                issue.type = repo.type;
+            }
+        });
+    });
+    return issues;
+}
 
 function latestIssues(req, res) {
     var twoDaysAgo = moment().subtract(2, 'days').utc().format("YYYY-MM-DDTHH:mm:ss") + "Z"
@@ -19,14 +30,15 @@ function latestIssues(req, res) {
         if (err) {
             json.renderErrors([err], res);
         } else {
-            json.render({issues: issues}, res);
+            json.render({issues: addTypes(issues)}, res);
         }
     });
 }
 
 module.exports = function(cfg) {
-    var repos = _.map(cfg.repos, function(repo) { return repo.slug; });
-    sprinter = new Sprinter(ghUsername, ghPassword, repos)
+    var repoNames = _.map(cfg.repos, function(repo) { return repo.slug; });
+    sprinter = new Sprinter(ghUsername, ghPassword, repoNames);
+    repos = cfg.repos;
     return {
         issues: latestIssues
     };
