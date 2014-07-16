@@ -1,32 +1,33 @@
 {
-    "name": "nupic.wallboard",
-    "version": "0.1.0",
-    "description": "Wallboard, build for NuPIC",
-    "author": "Matthew Taylor <matt@numenta.org>",
-    "main": "index.js",
-    "license": {
-        "type": "MIT"
-    },
-    "scripts": {
-        "start": "node index.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/numenta/nupic.wallboard.git"
-    },
-    "dependencies": {
-        "express":          "3.4.7",
-        "request":          "2.29.0",
-        "async":            "0.4.0",
-        "travis-ci":        "1.1.1",
-        "js-yaml":          "3.1.0",
-        "config":           "0.4.33",
-        "underscore":       "1.5.2",
-        "sprinter":         "0.0.11",
-        "travis-foreman":   "0.0.3",
-        "github":            "~0.1.0"
-    },
-    "engines": {
-        "node": "0.10.x"
-    }
+  "name": "nupic.wallboard",
+  "version": "0.1.0",
+  "description": "Wallboard, build for NuPIC",
+  "author": "Matthew Taylor <matt@numenta.org>",
+  "main": "index.js",
+  "license": {
+    "type": "MIT"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/numenta/nupic.wallboard.git"
+  },
+  "dependencies": {
+    "async": "0.4.0",
+    "config": "0.4.33",
+    "express": "3.4.7",
+    "github": "~0.1.0",
+    "js-yaml": "3.1.0",
+    "moment": "2.7.0",
+    "request": "2.29.0",
+    "sprinter": "0.1.6",
+    "travis-ci": "1.1.1",
+    "travis-foreman": "0.0.3",
+    "underscore": "1.5.2"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
 }

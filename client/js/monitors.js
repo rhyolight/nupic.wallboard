@@ -108,7 +108,7 @@ $(function() {
             url: src,
             success: function(resp) {
                 var $script = $('<script type="text/template" id="' + id + '_tmpl">' + resp + '</script>');
-                $('body').append($script);
+                $body.append($script);
                 loadedTemplates.push(id);
                 callback(null, id);
             },
@@ -202,7 +202,7 @@ $(function() {
                             namespace: namespace
                         }) + template(data) + monitorWrapBottom
                         $('#' + monitorId).html(renderedHtml);
-                        reportMonitorStatus(monitorId, data.status);
+//                        reportMonitorStatus(monitorId, data.status);
                     }
                   ;
                 if (! $monitorEl.length) {

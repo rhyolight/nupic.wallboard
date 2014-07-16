@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>NuPIC Wallboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
@@ -8,74 +8,75 @@
     <link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="css/style.css" rel="stylesheet" media="screen">
     <link href="css/nupic.css" rel="stylesheet" media="screen">
-  </head>
-  <body>
-    <div id="overall-status"></div>
-    <div class="header">
-      <div class="container-fluid">
+</head>
+<body>
+<div id="overall-status"></div>
+<div class="header">
+    <div class="container-fluid">
         <!-- <div id="settings"></div> -->
         <div class="row-fluid">
-          <div class="span6">
-            <h1>NuPIC Status</h1>
-            <ul id="page-links">
-                <li>[<a href="/issues.html">issues</a>]</li>
-                <li>[<a href="/builds.html">builds</a>]</li>
-            </ul>
-          </div>
-          <div class="span6">
-            <div class="row-fluid">
-              <div class="span3" id="github_status"></div>
-              <div class="span3" id="travis_status"></div>
-              <div class="span3" id="numenta_org_status"></div>
-              <div class="span3" id="nupic_doc_build_status"></div>
-              <div class="span3" id="nupic_core_doc_build_status"></div>
+            <div class="span6">
+                <h1>NuPIC Status</h1>
+                <ul id="page-links">
+                    <li>[<a href="/issues.html">issues</a>]</li>
+                    <li>[<a href="/builds.html">builds</a>]</li>
+                </ul>
             </div>
-          </div>
+            <div class="span6">
+                <div class="row-fluid">
+                    <div class="span3" id="github_status"></div>
+                    <div class="span3" id="travis_status"></div>
+                    <div class="span3" id="numenta_org_status"></div>
+                    <div class="span3" id="nupic_doc_build_status"></div>
+                    <div class="span3" id="nupic_core_doc_build_status"></div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div id="tab-container" class="tab-container">
-            <ul class='etabs'>
-              <li class='tab'><a href="#nupic-status-tab">nupic</a></li>
-              <li class='tab'><a href="#nupic-core-status-tab">nupic.core</a></li>
-              <li class='tab'><a href="#dev-tab">dev</a></li>
-            </ul>
-      <div id="nupic-status-tab" class="container-fluid">
+<div id="tab-container" class="tab-container">
+    <ul class='etabs'>
+        <li class='tab'><a href="#main-tab">MAIN</a></li>
+        <li class='tab'><a href="#nupic-status-tab">nupic</a></li>
+        <li class='tab'><a href="#nupic-core-status-tab">nupic.core</a></li>
+    </ul>
+    <div id="nupic-status-tab" class="container-fluid">
         <div class="row-fluid">
-          <div id="nupic_travis_latest" class="span3"></div>
-          <div id="nupic_travis_builds" class="span4"></div>
-          <div id="nupic_travis_pr_builds" class="span5"></div>
+            <div id="nupic_travis_latest" class="span3"></div>
+            <div id="nupic_travis_builds" class="span4"></div>
+            <div id="nupic_travis_pr_builds" class="span5"></div>
         </div>
-      </div>
-      <div id="nupic-core-status-tab" class="container-fluid">
-        <div class="row-fluid">
-          <div id="nupic_core_travis_latest" class="span3"></div>
-          <div id="nupic_core_travis_builds" class="span4"></div>
-          <div id="nupic_core_travis_pr_builds" class="span5"></div>
-        </div>
-      </div>
-      <div id="dev-tab" class="container-fluid">
-        <div class="row-fluid">
-          <div id="tools_travis_latest" class="span3"></div>
-          <div id="nupic_pr_report" class="span6"></div>
-          <div id="issues_status" class="span3"></div>
-        </div>
-      </div>
     </div>
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-    <script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.1.2.js"></script>
-    <script src="/js/lib/async.js"></script>
-    <script src="/js/lib/moment.min.js"></script>
-    <script src="/js/lib/jquery.easytabs.min.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/monitors.js"></script>
-    <script src="/js/lib/enable_popovers.js"></script>
-    <script>
-      $(function() {
-          $('#tab-container').easytabs();
-      });
-    </script>
-  </body>
+    <div id="nupic-core-status-tab" class="container-fluid">
+        <div class="row-fluid">
+            <div id="nupic_core_travis_latest" class="span3"></div>
+            <div id="nupic_core_travis_builds" class="span4"></div>
+            <div id="nupic_core_travis_pr_builds" class="span5"></div>
+        </div>
+    </div>
+    <div id="main-tab" class="container-fluid">
+        <div class="row-fluid">
+            <div id="repo_status" class="span3"></div>
+            <div id="latest_issues" class="span5"></div>
+            <div id="issues_status" class="span3"></div>
+        </div>
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v1.1.2.js"></script>
+<script src="/js/lib/async.js"></script>
+<script src="/js/lib/moment.min.js"></script>
+<script src="/js/lib/jquery.easytabs.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="js/monitors.js"></script>
+<script src="/js/lib/enable_popovers.js"></script>
+<script>
+    $(function () {
+        $('#tab-container').easytabs();
+    });
+</script>
+</body>
 </html>

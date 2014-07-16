@@ -6,34 +6,42 @@
   refresh_rate: 180
   repos_url: "http://numenta.org/resources/repos.yaml"
 
-  monitors: 
+  monitors:
 
-    nupic_travis_latest: 
+    repo_status:
+      type: repo_status
+
+    latest_issues:
+      type: latest_issues
+      refresh_rate: 600
+
+
+    nupic_travis_latest:
       type: "travis_latest"
-      options: 
+      options:
         organization: "numenta"
         repository: "nupic"
 
-    # experiments_travis_latest: 
+    # experiments_travis_latest:
     #   type: "travis_latest"
-    #   options: 
+    #   options:
     #     organization: "numenta"
     #     repository: "experiments"
 
-    tools_travis_latest: 
+    tools_travis_latest:
       type: "travis_latest"
-      options: 
+      options:
         organization: "numenta"
         repository: "nupic.tools"
 
-    nupic_travis_builds: 
+    nupic_travis_builds:
       type: "travis_builds"
       options:
         pull_requests: false
         organization: "numenta"
         repository: "nupic"
 
-    nupic_travis_pr_builds: 
+    nupic_travis_pr_builds:
       type: "travis_builds"
       options:
         pull_requests: true
@@ -42,7 +50,7 @@
 
     nupic_core_travis_latest:
       type: "travis_latest"
-      options: 
+      options:
         organization: "numenta"
         repository: "nupic.core"
 
@@ -53,7 +61,7 @@
         organization: "numenta"
         repository: "nupic.core"
 
-    nupic_core_travis_pr_builds: 
+    nupic_core_travis_pr_builds:
       type: "travis_builds"
       options:
         pull_requests: true
@@ -87,6 +95,6 @@
         name: "nupic.core"
         url: "http://numenta.org/docs/nupic.core"
 
-    nupic_pr_report:
-      type: "pr_report"
-      refresh_rate: 600
+#    nupic_pr_report:
+#      type: "pr_report"
+#      refresh_rate: 600

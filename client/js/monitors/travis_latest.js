@@ -27,7 +27,7 @@ $(function() {
               , duration: WB.utils.timeBetween(started, finished)
             });
         });
-    };
+    }
 
     window.WB.travis_latest = initialize;
 

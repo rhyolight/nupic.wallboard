@@ -1,0 +1,48 @@
+<style>
+    div.repo_status table {
+        width: 100%;
+    }
+    div.repo_status table tr.primary {
+        background-color: lightblue;
+    }
+    div.repo_status table tr.tooling {
+        background-color: lightgreen;
+    }
+    div.repo_status table tr.support {
+        background-color: lightyellow;
+    }
+    div.repo_status table tr.app {
+        background-color: lightgray;
+    }
+    div.repo_status table tr.misc {
+        background-color: lightpink;
+    }
+</style>
+<table>
+    <thead>
+    <tr>
+        <th colspan="3">{{title}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each repos}}
+        <tr class="{{type}}">
+            <td>{{slug}}</td>
+            <td>
+            {{#if travis}}
+                <a href="https://travis-ci.org/{{slug}}" target="_blank">
+                    <img src="https://travis-ci.org/{{slug}}.svg?branch={{branch}}"/>
+                </a>
+            {{/if}}
+            </td>
+            <td>
+                {{#if coverage}}
+                <a href="https://coveralls.io/r/{{slug}}?branch={{branch}}" target="_blank">
+                    <img src="https://coveralls.io/repos/{{slug}}/badge.png?branch={{branch}}"/>
+                </a>
+                {{/if}}
+            </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
