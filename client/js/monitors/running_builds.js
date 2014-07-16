@@ -18,7 +18,6 @@ $(function() {
                     doomed.push(repoName);
                 }
                 _.each(repoBuilds, function(build) {
-                    console.log(build);
                     if (build.started_at) {
                         build.started_ago = ' ' + moment(build.started_at).from(new Date());
                     } else {
@@ -28,6 +27,8 @@ $(function() {
                     if (build.pull_request) {
                         build.pr_url = buildPullRequestUrl('numenta/' + repoName, build.pull_request_number);
                     }
+                    // Replace long SHA with short one.
+                    build.commit.sha = build.commit.sha.substr(0,7);
                 });
             });
             _.each(doomed, function(repoToRemove) {
