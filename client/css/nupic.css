@@ -81,3 +81,6 @@ table th {
 table th.small {
     font-size: 12pt;
 }
+.table tbody tr.warning>td {
+    background-color: lightgray;
+}
