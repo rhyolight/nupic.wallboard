@@ -9,7 +9,6 @@ var path = require('path')
   , ajaxHandlerInitializer = require('./server/ajaxHandlers')
   , ajaxHandlers
   , issueHandler = require('./server/issueHandler')
-  , buildHandler = require('./server/buildHandler')
   , requestProxy = require('./server/requestProxy')
   ;
 
@@ -77,9 +76,6 @@ function startServer() {
     // Handles requests for issue reports across all repos.
     app.get('/_issues', issueHandler(CONFIG));
 
-    // Handles requests for running build reports across all repos.
-    app.get('/_builds', buildHandler);
-
     app.listen(PORT, function() {
         console.log('nupic.wallboard server running on\n'
             + '\thttp://localhost:' + PORT);
@@ -95,6 +91,5 @@ getGlobalRepos(CONFIG.repos_url, function(err, repos) {
     ajaxHandlers = ajaxHandlerInitializer(CONFIG);
     writeHtmlTemplate('index', 'nupic');
     writeHtmlTemplate('issues', 'issues');
-    writeHtmlTemplate('builds', 'builds');
     startServer();
 });
