@@ -108,7 +108,7 @@ $(function() {
             url: src,
             success: function(resp) {
                 var $script = $('<script type="text/template" id="' + id + '_tmpl">' + resp + '</script>');
-                $('body').append($script);
+                $body.append($script);
                 loadedTemplates.push(id);
                 callback(null, id);
             },
@@ -169,8 +169,10 @@ $(function() {
         _.each(monitors, function(monitorConfig, monitorId) {
             var scriptPath = monitorConfig.js
               , loadingHtml = '<img src="/images/ajax-loader.gif" alt="loading"/>'
-              , namespace = scriptPath.split('/').pop().split('.').shift()
-              , templatePath = scriptPath.split('.js')[0] + '.html'
+              , scriptName = scriptPath.split('/').pop()
+              , scriptDirectory = scriptPath.substr(0, scriptPath.length - scriptName.length)
+              , namespace = scriptName.split('.').shift()
+              , templatePath = scriptDirectory + '/tmpl/' + namespace + '.html'
               ;
             async.parallel([
                 function(callback) {
@@ -200,7 +202,7 @@ $(function() {
                             namespace: namespace
                         }) + template(data) + monitorWrapBottom
                         $('#' + monitorId).html(renderedHtml);
-                        reportMonitorStatus(monitorId, data.status);
+//                        reportMonitorStatus(monitorId, data.status);
                     }
                   ;
                 if (! $monitorEl.length) {

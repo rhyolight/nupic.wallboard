@@ -6,7 +6,8 @@ var path = require('path')
   , express = require('express')
   , CONFIG =  require('config')
   , PORT = process.env.PORT || CONFIG.app.port
-  , ajaxHandlers = require('./server/ajaxHandlers')(CONFIG)
+  , ajaxHandlerInitializer = require('./server/ajaxHandlers')
+  , ajaxHandlers
   , issueHandler = require('./server/issueHandler')
   , buildHandler = require('./server/buildHandler')
   , requestProxy = require('./server/requestProxy')
@@ -33,6 +34,10 @@ function getGlobalRepos(url, cb) {
             // Have to append the "---" line to the start of the YAML file or it
             // doesn't parse properly.
             repos = yaml.safeLoad("---\n" + body).repos;
+            // Default branch is master.
+            _.each(repos, function(repo) {
+                if (! repo.branch) { repo.branch = 'master'; }
+            });
         } catch(e) {
             throw new Error('Config file "' + url + '" is invalid YAML!');
         }
@@ -87,6 +92,7 @@ getGlobalRepos(CONFIG.repos_url, function(err, repos) {
     }
     CONFIG.repos = repos;
     normalizeConfig(CONFIG);
+    ajaxHandlers = ajaxHandlerInitializer(CONFIG);
     writeHtmlTemplate('index', 'nupic');
     writeHtmlTemplate('issues', 'issues');
     writeHtmlTemplate('builds', 'builds');

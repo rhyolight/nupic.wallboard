@@ -15,7 +15,7 @@ $(function() {
               , date: WB.utils.timeAgo(dateString)
             });
         });
-    };
+    }
 
     window.WB.doxygen_build = initialize;
 
