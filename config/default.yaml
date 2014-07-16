@@ -15,12 +15,14 @@
       type: latest_issues
       refresh_rate: 600
 
+    running_builds:
+      type: running_builds
 
-    nupic_travis_latest:
-      type: "travis_latest"
-      options:
-        organization: "numenta"
-        repository: "nupic"
+#    nupic_travis_latest:
+#      type: "travis_latest"
+#      options:
+#        organization: "numenta"
+#        repository: "nupic"
 
     # experiments_travis_latest:
     #   type: "travis_latest"
@@ -48,11 +50,11 @@
         organization: "numenta"
         repository: "nupic"
 
-    nupic_core_travis_latest:
-      type: "travis_latest"
-      options:
-        organization: "numenta"
-        repository: "nupic.core"
+#    nupic_core_travis_latest:
+#      type: "travis_latest"
+#      options:
+#        organization: "numenta"
+#        repository: "nupic.core"
 
     nupic_core_travis_builds:
       type: "travis_builds"
@@ -74,8 +76,8 @@
     travis_status:
       type: "travis_status"
 
-    issues_status:
-      type: "issues_status"
+#    issues_status:
+#      type: "issues_status"
 
     numenta_org_status:
       type: "http_status"
