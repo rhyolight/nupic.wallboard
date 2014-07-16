@@ -2,29 +2,52 @@
     div.latest_issues table {
         border-collapse: collapse;
     }
-    div.latest_issues td {
+    div.latest_issues table td {
         padding: 0px 5px;
     }
-    div.latest_issues td.updated {
+    div.latest_issues table td.updated {
         width: 20%;
     }
-    div.latest_issues td.user img {
-        width: 36px;
-        max-width: inherit;
+    div.latest_issues table td.user {
+        text-align: right;
+        padding: 0;
     }
-    div.latest_issues td {
+    div.latest_issues table td.user img {
+        max-width: inherit;
+        width: 40px;
+    }
+    div.latest_issues table td {
         border-bottom: solid black 1px;
     }
+    div.latest_issues table tr.primary {
+        background-color: lightblue;
+    }
+    div.latest_issues table tr.tooling {
+        background-color: lightgreen;
+    }
+    div.latest_issues table tr.support {
+        background-color: lightyellow;
+    }
+    div.latest_issues table tr.app {
+        background-color: lightgray;
+    }
+    div.latest_issues table tr.misc {
+        background-color: lightpink;
+    }
+
 </style>
 <table>
     <thead>
     <tr>
-        <th colspan="4">{{title}}</th>
+        <th colspan="2">{{title}}</th>
+        <th colspan="2">
+            <a href="/issues.html" target="_blank">View All</a>
+        </th>
     </tr>
     </thead>
     <tbody>
     {{#each issues}}
-    <tr>
+    <tr class="{{type}}">
         <td class="title">
             <a href="{{html_url}}" target="_blank">
             {{title}}
