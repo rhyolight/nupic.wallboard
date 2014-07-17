@@ -1,28 +1,16 @@
-<style>
-    ul.name-count {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-        font-size: 14pt;
-    }
-    ul.name-count li {
-        padding-bottom:5px;
-        text-align:left;
-    }
-    ul.name-count li.selected {
-        font-weight: bold;
-    }
-</style>
+<div class="name-count">
 
-<h3>{{title}}</h3>
-<ul class="name-count">
-{{#each items}}
-    <li data-name="{{name}}" data-type="{{../type}}">
+    <h3>{{title}}</h3>
+    <ul>
+        {{#each items}}
+        <li data-name="{{name}}" data-type="{{../type}}">
         <span><a href="#{{../type}}={{name}}">{{name}}</a>
         {{#if count}}
             ({{count}})
         {{/if}}
         </span>
-    </li>
-{{/each}}
-</ul>
+        </li>
+        {{/each}}
+    </ul>
+
+</div>

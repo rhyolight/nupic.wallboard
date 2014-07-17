@@ -35,6 +35,17 @@ function splitRepo(issues) {
     return byRepo;
 }
 
+function addTypes(issues) {
+    _.each(issues, function(issue) {
+        _.each(config.repos, function(repo) {
+            if (repo.slug == issue.repo) {
+                issue.type = repo.type;
+            }
+        });
+    });
+    return issues;
+}
+
 function listIssues(req, res) {
     var issueGetters = [function(callback) {
         sprinter.getIssues({sort: 'updated'}, callback);
@@ -45,8 +56,8 @@ function listIssues(req, res) {
         if (err) {
             throw(err);
         }
-        var openIssues = issues[0]
-          , closedIssues = issues[1]
+        var openIssues = addTypes(issues[0])
+          , closedIssues = addTypes(issues[1])
           , allIssues = openIssues.concat(closedIssues)
           , byMilestone = splitMilestones(allIssues)
           , milestoneNames = _.keys(byMilestone)
@@ -65,7 +76,7 @@ function listIssues(req, res) {
 function initializer(cfg) {
     config = cfg;
     repos = _.map(config.repos, function(repo) { return repo.slug; });
-    sprinter = new Sprinter(ghUsername, ghPassword, repos)
+    sprinter = new Sprinter(ghUsername, ghPassword, repos);
     return listIssues;
 }
 

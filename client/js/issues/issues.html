@@ -1,48 +1,47 @@
-<style>
-    ul.labels {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-    }
-    .labels li {
-        display: inline;
-        padding-bottom:5px;
-        text-align:left;
-    }
-</style>
 
-{{#each milestones}}
-    <div class="milestone all {{cssName}}">
-        <h2>{{name}}</h2>
+<table class="issues">
+    <thead>
+    <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Updated</th>
+        <th>Author</th>
+        <th></th>
+        <th>Assignee</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each milestones}}
         {{#each repos}}
-            <h3>{{name}}</h3>
-            <ul class="issues">
             {{#each issues}}
-
-                <li class="issue-item {{cssClass}} {{state}}">
-
-                    <div class="issue">
-                        <h4>
-                            <a href="{{html_url}}" target="_blank">{{title}}</a>
-                            {{#if assignee}}
-                            ({{assignee.login}})
-                            {{/if}}
-                        </h4>
-                        {{#if labels}}
-                        <ul class="labels">
-                            <li>
-                                {{#labels}}
-                                <span class="label" style="background-color:#{{color}};">{{name}}</span>
-                                {{/labels}}
-                            </li>
-                        </ul>
+                <tr class="issue-item {{cssClass}} {{type}}">
+                    <td class="icon {{state}}"></td>
+                    <td class="title">
+                        <a href="{{html_url}}" target="_blank">
+                            {{title}}
+                        </a>
+                    </td>
+                    <td class="repo">{{repo}}</td>
+                    <td class="updated">{{updated}}</td>
+                    <td class="author">
+                        <a href="https://github.com/{{user.login}}" target="_blank">
+                        <img src="{{user.avatar_url}}" title="authored by {{user.login}}"/>
+                        </a>
+                    </td>
+                    <td class="milestone">
+                        {{#if milestone}}
+                            {{milestone.title}}
                         {{/if}}
-                        <!--<p class="description">{{body}}</p>-->
-                    </div>
-                </li>
-
-            {{/each}}
-            </ul>
-        {{/each}}
-    </div>
-{{/each}}
+                    </td>
+                    <td class="assignee">
+                        <a href="https://github.com/{{assignee.login}}" target="_blank">
+                        <img src="{{assignee.avatar_url}}" title="assigned to {{assignee.login}}"/>
+                        </a>
+                    </td>
+                </tr>
+            {{/each}} <!-- issues -->
+        {{/each}} <!-- repos -->
+    {{/each}} <!-- milestones -->
+    </tbody>
+</table>

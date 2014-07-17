@@ -1,50 +1,131 @@
 body {
-    margin: 20px;
+    margin-left: 20px;
+    padding: 0;
 }
 
 #assignee-filter {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 200px;
+    top: 0;
+    right: 0;
+    width: 160px;
 }
 
 #repo-filter {
     position: absolute;
-    top: 20px;
-    right: 220px;
+    top: 0;
+    right: 160px;
     width: 200px;
 }
 #milestone-filter {
     position: absolute;
-    top: 20px;
-    right: 430px;
+    top: 0;
+    right: 360px;
     width: 130px;
 }
 #type-filter {
     position: absolute;
-    top: 20px;
-    right: 570px;
-    width: 150px;
+    top: 0;
+    right: 490px;
+    width: 160px;
 }
 #state-filter {
     position: absolute;
-    top: 20px;
-    right: 750px;
+    top: 0;
+    right: 650px;
     width: 130px;
 }
 
-ul.issues li.issue.open {
-    list-style-image: url(../images/issue.png);
+div.name-count {
+    padding: 0 5px;
 }
 
-ul.issues li.pull_request.open {
-    list-style-image: url(../images/pr.png);
+div.name-count ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 11pt;
 }
-ul.issues li.issue.closed {
-    list-style-image: url(../images/issue_closed.png);
+div.name-count ul li {
+    padding-bottom: 0;
+    text-align:left;
+}
+div.name-count ul li.selected {
+    font-weight: bold;
 }
 
-ul.issues li.pull_request.closed {
-    list-style-image: url(../images/pr_closed.png);
+table.issues {
+    width: 900px;
+}
+table.issues tr th {
+    font-weight: normal;
+    font-size: inherit;
+    text-align: center;
+}
+table.issues td.icon {
+    max-width: 20px;
+    width: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+table.issues tr.issue td.open {
+    background-image: url(../images/issue.png);
+}
+
+table.issues tr.pull_request td.open {
+    background-image: url(../images/pr.png);
+}
+table.issues tr.issue td.closed {
+    background-image: url(../images/issue_closed.png);
+}
+
+table.issues tr.pull_request td.closed {
+    background-image: url(../images/pr_closed.png);
+}
+
+table.issues {
+    border-collapse: collapse;
+}
+table.issues th {
+    text-align: right;
+    font-size: 18pt;
+}
+table.issues td {
+    padding: 0 5px;
+}
+table.issues td.updated, table.issues td.milestone {
+    white-space: nowrap
+}
+table.issues td.author, table.issues td.assignee {
+    text-align: right;
+    padding: 0;
+}
+table.issues td.author img, table.issues td.assignee img {
+    max-width: inherit;
+    width: 40px;
+}
+table.issues td.icon {
+    background-color: white;
+    border: none;
+}
+table.issues td.icon img {
+    max-width: inherit;
+    width: 20px;
+}
+table.issues td {
+    border-bottom: solid black 1px;
+}
+table.issues tr.primary {
+    background-color: lightblue;
+}
+table.issues tr.tooling {
+    background-color: lightgreen;
+}
+table.issues tr.support {
+    background-color: lightyellow;
+}
+table.issues tr.app {
+    background-color: lightgray;
+}
+table.issues tr.misc {
+    background-color: lightpink;
 }

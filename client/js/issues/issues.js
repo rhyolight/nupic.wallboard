@@ -58,6 +58,7 @@ $(function() {
                 var cssName = repoName.split('/').pop().replace(/\./g, '-')
                   , convertedIssues = _.map(issues, function(issue) {
                       issue.cssClass = cssName + ' all ';
+                      issue.updated = moment(issue.updated_at).from(new Date());
                       if (issue.assignee) {
                           issue.cssClass += issue.assignee.login;
                       } else {
@@ -251,7 +252,7 @@ $(function() {
         }
         _.each(filterElements, function($filterElement, filterType) {
             // On filter click, filters all issues by filter type clicked.
-            $filterElement.find('ul.name-count li').click(function(event) {
+            $filterElement.find('div.name-count ul li').click(function(event) {
                 var filter = getLocalFilter(event, filterType);
                 render(filterIssues(allIssues, filter), filter);
             });
@@ -261,13 +262,13 @@ $(function() {
     function updateFilterLinks(filter) {
         _.each(filterElements, function($filterElement, filterType) {
             // Remove any selections on current filter triggers
-            $filterElement.find('ul.name-count li').removeClass('selected');
+            $filterElement.find('div.name-count ul li').removeClass('selected');
             // Add selected to chosen filters.
-            $filterElement.find('ul.name-count li[data-name=\'' + filter[filterType] + '\']').addClass('selected');
+            $filterElement.find('div.name-count ul li[data-name=\'' + filter[filterType] + '\']').addClass('selected');
         });
 
         // Update href links with new filter
-        $('ul.name-count li').each(function() {
+        $('div.name-count ul li').each(function() {
             var $item = $(this)
               , $link = $item.find('a')
               , pieces = $link.attr('href').split('#')
@@ -372,7 +373,10 @@ $(function() {
             _.each(repos, function(issues) {
                 _.each(issues, function(issue) {
                     if (! issue.assignee) {
-                        issue.assignee = {login: 'unassigned'};
+                        issue.assignee = {
+                            login: 'unassigned',
+                            avatar_url: '/images/unassigned.png'
+                        };
                     }
                 });
             });
