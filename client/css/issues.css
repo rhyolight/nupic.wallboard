@@ -54,7 +54,7 @@ div.name-count ul li.selected {
 }
 
 table.issues {
-    width: 900px;
+    width: 1000px;
 }
 table.issues tr th {
     font-weight: normal;
@@ -128,4 +128,9 @@ table.issues tr.app {
 }
 table.issues tr.misc {
     background-color: lightpink;
+}
+td.labels span {
+    white-space: nowrap;
+    border-radius: 3px;
+    padding: 0 2px;
 }

@@ -5,6 +5,7 @@
         <th></th>
         <th></th>
         <th></th>
+        <th></th>
         <th>Updated</th>
         <th>Author</th>
         <th></th>
@@ -23,6 +24,11 @@
                         </a>
                     </td>
                     <td class="repo">{{repo}}</td>
+                    <td class="labels">
+                        {{#each labels}}
+                        <span style="background-color:#{{color}}">{{name}}</span>
+                        {{/each}}
+                    </td>
                     <td class="updated">{{updated}}</td>
                     <td class="author">
                         <a href="https://github.com/{{user.login}}" target="_blank">
