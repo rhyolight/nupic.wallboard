@@ -99,7 +99,7 @@ table.issues td.author, table.issues td.assignee {
     text-align: right;
     padding: 0;
 }
-table.issues td.author img, table.issues td.assignee img {
+table.issues td.author img, table.issues img {
     max-width: inherit;
     width: 40px;
 }

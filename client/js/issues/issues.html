@@ -6,6 +6,7 @@
         <th></th>
         <th></th>
         <th></th>
+        <th></th>
         <th>Updated</th>
         <th>Author</th>
         <th></th>
@@ -27,6 +28,13 @@
                     <td class="labels">
                         {{#each labels}}
                         <span style="background-color:#{{color}}">{{name}}</span>
+                        {{/each}}
+                    </td>
+                    <td class="builds">
+                        {{#each builds}}
+                            <a href="{{html_url}}" target="_blank">
+                                <img src="/images/travis-logo.png" title="Build {{id}}" class="pulsate"/>
+                            </a>
                         {{/each}}
                     </td>
                     <td class="updated">{{updated}}</td>

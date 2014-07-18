@@ -3,6 +3,12 @@ var _ = require('underscore')
   , ghUsername = process.env.GH_USERNAME
   , ghPassword = process.env.GH_PASSWORD
   , Sprinter = require('sprinter')
+  , Foreman = require('travis-foreman')
+  , foreman = new Foreman({
+        organization: 'numenta',
+        username: ghUsername,
+        password: ghPassword
+    })
   , sprinter
   , repos
   , config
@@ -46,18 +52,44 @@ function addTypes(issues) {
     return issues;
 }
 
+function buildTravisUrl(repoSlug, buildId) {
+    return 'https://travis-ci.org/' + repoSlug + '/builds/' + buildId;
+}
+
+function addRunningBuildInfo(issues, builds) {
+    _.each(builds, function(repoBuilds, repo) {
+        _.each(issues, function(issue) {
+            _.each(repoBuilds, function(build) {
+                if(issue.pull_request && build.pull_request && issue.repo.indexOf(repo) > -1) {
+                    if (build.pull_request_number == issue.number) {
+                        if (! issue.builds) {
+                            issue.builds = [];
+                        }
+                        build.html_url = buildTravisUrl(issue.repo, build.id);
+                        issue.builds.push(build);
+                    }
+                }
+            });
+        });
+    });
+    return issues;
+}
+
 function listIssues(req, res) {
-    var issueGetters = [function(callback) {
+    var fetchers = [function(callback) {
         sprinter.getIssues({sort: 'updated'}, callback);
     }, function(callback) {
         sprinter.getIssues({state: 'closed', sort: 'updated'}, callback);
+    }, function(callback) {
+        foreman.listRunningBuilds(callback);
     }];
-    async.parallel(issueGetters, function(err, issues) {
+    async.parallel(fetchers, function(err, results) {
         if (err) {
             throw(err);
         }
-        var openIssues = addTypes(issues[0])
-          , closedIssues = addTypes(issues[1])
+        var runningBuilds = results[2]
+          , openIssues = addRunningBuildInfo(addTypes(results[0]), runningBuilds)
+          , closedIssues = addTypes(results[1])
           , allIssues = openIssues.concat(closedIssues)
           , byMilestone = splitMilestones(allIssues)
           , milestoneNames = _.keys(byMilestone)

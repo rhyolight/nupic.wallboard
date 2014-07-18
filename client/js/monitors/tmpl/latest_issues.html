@@ -1,6 +1,7 @@
 <style>
     div.latest_issues table {
         border-collapse: collapse;
+        width: 100%;
     }
     div.latest_issues table td {
         padding: 0 5px;
@@ -47,7 +48,7 @@
 <table>
     <thead>
     <tr>
-        <th colspan="4">{{title}}</th>
+        <th colspan="5">{{title}}</th>
         <th colspan="2">
             <a href="/issues.html" target="_blank">View All</a>
         </th>
@@ -75,6 +76,13 @@
                 {{milestone.title}}
                 </a>
             {{/if}}
+        </td>
+        <td class="builds">
+            {{#each builds}}
+            <a href="{{html_url}}" target="_blank">
+                <img src="/images/travis-logo.png" title="Build {{id}}" class="pulsate"/>
+            </a>
+            {{/each}}
         </td>
         <td class="updated">{{updated}}</td>
         <td class="user">
