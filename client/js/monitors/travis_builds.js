@@ -40,7 +40,7 @@ $(function() {
               }
             template(history);
         });
-    };
+    }
 
     window.WB.travis_builds = initialize;
 

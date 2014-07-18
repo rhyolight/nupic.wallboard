@@ -69,7 +69,6 @@ $(function() {
                       } else {
                           issue.cssClass += ' issue';
                       }
-                      console.log(issue.labels);
                       return issue;
                   });
                 repoList.push({

@@ -14,23 +14,23 @@
 
 {{#each builds}}
 
-<h4>{{@key}}</h4>
+    <h4>{{@key}}</h4>
 
-<ul>
-    {{#each this}}
-    <li class="build">
-        {{# if pull_request}}
-        <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> <span class="{{state}}">{{state}}</span><strong>{{started_ago}}</strong> for <strong>Pull Request</strong>:</p>
-        <blockquote>
-            <a target="_blank" href="{{pr_url}}">{{pull_request_title}}</a>
-        </blockquote>
-        {{else}}
-        <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> <span class="{{state}}">{{state}}</span>{{started_ago}} for commit <strong>{{commit.sha}}</strong>.</p>
-        <blockquote><a target="_blank" href="{{commit.compare_url}}">{{commit.message}}</a></blockquote>
-        {{/if}}
+    <ul>
+        {{#each this}}
+        <li class="build">
+            {{# if pull_request}}
+            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> <span class="{{state}}">{{state}}</span><strong>{{started_ago}}</strong> for <strong>Pull Request</strong>:</p>
+            <blockquote>
+                <a target="_blank" href="{{pr_url}}">{{pull_request_title}}</a>
+            </blockquote>
+            {{else}}
+            <p>Build <a target="_blank" href="{{html_url}}">{{number}}</a> <span class="{{state}}">{{state}}</span>{{started_ago}} for commit <strong>{{commit.sha}}</strong>.</p>
+            <blockquote><a target="_blank" href="{{commit.compare_url}}">{{commit.message}}</a></blockquote>
+            {{/if}}
 
-    </li>
-    {{/each}}
-</ul>
+        </li>
+        {{/each}}
+    </ul>
 
 {{/each}}
