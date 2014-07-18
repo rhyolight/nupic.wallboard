@@ -17,6 +17,7 @@
 
     running_builds:
       type: running_builds
+      refresh_rate: 60
 
 #    nupic_travis_latest:
 #      type: "travis_latest"
