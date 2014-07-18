@@ -11,7 +11,7 @@ var json = require('../utils/json')
 function runningBuilds(req, res) {
     foreman.listRunningBuilds(function(err, builds) {
         if (err) {
-            json.renderErrors([err]);
+            json.renderErrors([err], res);
         } else {
             json.render({builds: builds}, res);
         }
