@@ -1,6 +1,7 @@
 $(function() {
 
     var REFRESH_RATE = 3 * 60 * 1000 // 3 minutes
+      , allIssues
       , issuesTemplate = undefined
       , nameCountTemplate = undefined
       , $issues = $('#issues-container')
@@ -17,6 +18,10 @@ $(function() {
             state: $stateFilter
         }
       ;
+
+    function endsWith(needle, haystack) {
+        return haystack.indexOf(needle) == haystack.length - needle.length;
+    }
 
     function extractFilterFrom(hash) {
         var params = {milestone: 'all', repo: 'all', assignee: 'all', type: 'all', state: 'open'}
@@ -48,73 +53,32 @@ $(function() {
     }
 
     function convertIssuesToTemplateData(issues) {
-        var dataOut = {
-              milestones: []
-          }
-          , backlog = undefined;
-        _.each(issues, function(repos, milestoneName) {
-            var repoList = [], payload;
-            _.each(repos, function(issues, repoName) {
-                var cssName = repoName.split('/').pop().replace(/\./g, '-')
-                  , convertedIssues = _.map(issues, function(issue) {
-                      issue.cssClass = cssName + ' all ';
-                      issue.updated = moment(issue.updated_at).from(new Date());
-                      if (issue.assignee) {
-                          issue.cssClass += issue.assignee.login;
-                      } else {
-                          issue.cssClass += 'unassigned';
-                      }
-                      if (issue.pull_request) {
-                          issue.cssClass += ' pull_request';
-                      } else {
-                          issue.cssClass += ' issue';
-                      }
-                      return issue;
-                  });
-                repoList.push({
-                    name: repoName.split('/').pop()
-                  , issues: convertedIssues
-                  , cssName: cssName
-                });
-            });
-            payload = {
-                name: milestoneName,
-                cssName: milestoneName.replace(/\s+/g, '-'),
-                repos: repoList
-            };
-            if (milestoneName == 'Backlog') {
-                backlog = payload;
-            } else {
-                dataOut.milestones.push(payload);
-            }
-        });
-        if (backlog) {
-            dataOut.milestones.push(backlog);
-        }
-        return dataOut;
+        return {
+            issues: _.map(issues, function(issue) {
+                issue.updated = moment(issue.updated_at).from(new Date());
+                return issue;
+            })
+        };
     }
 
     function extractAssignees(issues) {
         var all = {
-            name: 'all'
+            name: 'all', count: 0
         }, assignees = [];
-        _.each(issues, function(repos) {
-            _.each(repos, function(issues) {
-                _.each(issues, function(issue) {
-                    if (issue.assignee) {
-                        var name = issue.assignee.login
-                            , assignee = _.find(assignees, function(a) { return a.name == name; });
-                        if (! assignee) {
-                            assignees.push({
-                                name: name,
-                                count: 1
-                            });
-                        } else {
-                            assignee.count++;
-                        }
-                    }
-                });
-            });
+        _.each(issues, function(issue) {
+            if (issue.assignee) {
+                var name = issue.assignee.login
+                    , assignee = _.find(assignees, function(a) { return a.name == name; });
+                if (! assignee) {
+                    assignees.push({
+                        name: name,
+                        count: 1
+                    });
+                } else {
+                    assignee.count++;
+                }
+                all.count++;
+            }
         });
         assignees = _.sortBy(assignees, function(a) { return a.count; }).reverse()
         assignees.unshift(all);
@@ -127,25 +91,19 @@ $(function() {
 
     function extractIssueTypes(issues) {
         var all = {
-            name: 'all'
+            name: 'all', count: 0
         }, issuesOut = {
-            name: 'issues',
-            count: 0
+            name: 'issues', count: 0
         }, prs = {
-            name: 'pull requests',
-            count: 0
+            name: 'pull requests', count: 0
         }, allIssuesOut = [all, issuesOut, prs];
-        _.each(issues, function(repos) {
-            _.each(repos, function(issues) {
-                _.each(issues, function(issue) {
-                    if (issue.pull_request) {
-                        prs.count++;
-                    } else {
-                        issuesOut.count++;
-                    }
-                    all.count++;
-                });
-            });
+        _.each(issues, function(issue) {
+            if (issue.pull_request) {
+                prs.count++;
+            } else {
+                issuesOut.count++;
+            }
+            all.count++;
         });
         return {
             items: allIssuesOut
@@ -156,25 +114,19 @@ $(function() {
 
     function extractIssueStates(issues) {
         var all = {
-            name: 'all'
+            name: 'all', count: 0
         }, open = {
-            name: 'open',
-            count: 0
+            name: 'open', count: 0
         }, closed = {
-            name: 'closed',
-            count: 0
+            name: 'closed', count: 0
         }, allIssuesOut = [all, open, closed];
-        _.each(issues, function(repos) {
-            _.each(repos, function(issues) {
-                _.each(issues, function(issue) {
-                    if (issue.state == 'open') {
-                        open.count++;
-                    } else {
-                        closed.count++;
-                    }
-                    all.count++;
-                });
-            });
+        _.each(issues, function(issue) {
+            if (issue.state == 'open') {
+                open.count++;
+            } else {
+                closed.count++;
+            }
+            all.count++;
         });
         return {
             items: allIssuesOut
@@ -185,25 +137,21 @@ $(function() {
 
     function extractRepos(issues) {
         var all = {
-                name: 'all'
+                name: 'all', count: 0
             },
             reposOut = [];
-        _.each(issues, function(repos) {
-            _.each(repos, function(issues) {
-                _.each(issues, function(issue) {
-                    var repoName = issue.repo.split('/').pop()
-                      , repo = _.find(reposOut, function(repo) { return repo.name == repoName; });
-                    if (! repo) {
-                        reposOut.push({
-                            name: repoName,
-                            count: 1
-                        });
-                    } else {
-                        repo.count++;
-                    }
-                    all.count++;
+        _.each(issues, function(issue) {
+            var repoName = issue.repo.split('/').pop()
+              , repo = _.find(reposOut, function(repo) { return repo.name == repoName; });
+            if (! repo) {
+                reposOut.push({
+                    name: repoName,
+                    count: 1
                 });
-            });
+            } else {
+                repo.count++;
+            }
+            all.count++;
         });
         reposOut = _.sortBy(reposOut, function(r) { return r.count; }).reverse()
         reposOut.unshift(all);
@@ -217,22 +165,20 @@ $(function() {
 
     function extractMilestones(issues) {
         var all = {
-                name: 'all'
+                name: 'all', count: 0
             },
             milestonesOut = [all];
-        _.each(issues, function(repos, milestoneName) {
-            var milestone = _.find(milestonesOut, function(ms) { return milestoneName == ms.name; });
+        _.each(issues, function(issue) {
+            var milestone = _.find(milestonesOut, function(ms) { return issue.milestone.title == ms.name; });
             if (! milestone) {
-                milestone = {
-                    name: milestoneName,
-                    count: 0
-                };
+                milestonesOut.push({
+                    name: issue.milestone.title,
+                    count: 1
+                });
+            } else {
+                milestone.count++;
             }
-            _.each(repos, function(issues) {
-                milestone.count += issues.length;
-                all.count += issues.length;
-            });
-            milestonesOut.push(milestone);
+            all.count++;
         });
         milestonesOut = _.sortBy(milestonesOut, function(ms) {
             return ms.name.toLowerCase();
@@ -287,99 +233,53 @@ $(function() {
         $element.html(template(data));
     }
 
-    function filterAssignees(issues, assignee) {
-        var filtered = issues.slice(0);
-        if (assignee !== 'all') {
-            filtered = _.filter(issues, function(issue) {
-                return issue.assignee && issue.assignee.login == assignee;
-            });
-        }
-        return filtered;
-    }
-
-    function filterTypes(issues, type) {
-        var filtered = issues.slice(0);
-        if (type !== 'all') {
-            filtered = _.filter(filtered, function(issue) {
-                if (type == 'pull requests') {
-                    return issue.pull_request;
-                } else {
-                    return issue.pull_request == undefined;
-                }
-            });
-        }
-        return filtered;
-    }
-
-    function filterStates(issues, state) {
-        var filtered = issues.slice(0);
-        if (state !== 'all') {
-            filtered = _.filter(filtered, function(issue) {
-                return state == issue.state;
-            });
-        }
-        return filtered;
-    }
-
     function filterIssues(issues, filter) {
         // Replace + with space.
         _.each(filter, function(val, key) {
             filter[key] = val.replace('+', ' ');
         });
-            // Operate upon a deep local clone so we don't modify the top-level issues when we filter.
+        // Operate upon a deep local clone so we don't modify the top-level issues when we filter.
         var filteredIssues = $.extend(true, {}, issues);
-        // Filter by milestone.
-        if (filter.milestone) {
-            _.each(filteredIssues, function(repos, milestone) {
-                if (milestone !== filter.milestone && filter.milestone !== 'all') {
-                    delete filteredIssues[milestone];
-                } else {
-                    // Filter by repo.
-                    if (filter.repo) {
-                        _.each(repos, function(repoIssues, repo) {
-                            if (repo.split('/').pop() !== filter.repo && filter.repo !== 'all') {
-                                delete repos[repo];
-                            } else {
-                                // Filter by assignee.
-                                if (filter.assignee) {
-                                    repos[repo] = filterAssignees(repoIssues, filter.assignee);
-                                }
-                                // Filter by issue type.
-                                if (filter.type) {
-                                    repos[repo] = filterTypes(repos[repo], filter.type);
-                                }
-                                // Filter by issue state.
-                                if (filter.state) {
-                                    repos[repo] = filterStates(repos[repo], filter.state);
-                                }
-                            }
-                        });
-                        // Remove empty repos.
-                        filteredIssues[milestone] = {};
-                        _.each(repos, function(issues, repo) {
-                            if (issues.length) {
-                                filteredIssues[milestone][repo] = issues;
-                            }
-                        });
-                    }
+        filteredIssues = _.filter(filteredIssues, function(issue) {
+            if (filter.milestone
+                && filter.milestone !== 'all'
+                && (issue.milestone == undefined || filter.milestone !== issue.milestone.title)) {
+                return false;
+            }
+            if (filter.repo
+                && filter.repo !== 'all'
+                && ! endsWith(filter.repo, issue.repo)) {
+                return false;
+            }
+            if (filter.assignee
+                && filter.assignee !== 'all'
+                && (issue.assignee == undefined || filter.assignee !== issue.assignee.login)) {
+                return false;
+            }
+            if (filter.type
+                && filter.type !== 'all') {
+                if (filter.type == 'pull requests' && ! issue.pull_request) {
+                    return false;
+                } else if (filter.type == 'issues' && issue.pull_request) {
+                    return false;
                 }
-            });
-        }
+            }
+            if (filter.state && filter.state !== 'all' && filter.state !== issue.state) {
+                return false;
+            }
+            return true;
+        });
         return filteredIssues;
     }
 
     function addGhostUnassigned(issues) {
-        _.each(issues, function(repos) {
-            _.each(repos, function(issues) {
-                _.each(issues, function(issue) {
-                    if (! issue.assignee) {
-                        issue.assignee = {
-                            login: 'unassigned',
-                            avatar_url: '/images/unassigned.png'
-                        };
-                    }
-                });
-            });
+        _.each(issues, function(issue) {
+            if (! issue.assignee) {
+                issue.assignee = {
+                    login: 'unassigned',
+                    avatar_url: '/images/unassigned.png'
+                };
+            }
         });
     }
 
@@ -406,9 +306,9 @@ $(function() {
         _.each(filterElements, function($filterElement) {
             $filterElement.html("<p>" + loadingMessage + "</p>");
         });
-        $.getJSON('/_issues/', function(issues) {
+        $.getJSON('/_monitorRequest/latest_issues/allIssues', function(response) {
             // Keep this as the master copy to start fresh when filters are applied.
-            allIssues = issues;
+            allIssues = response.issues;
             addGhostUnassigned(allIssues);
             var filter = extractFilterFrom(window.location.hash);
             render(filterIssues(allIssues, filter), filter);
@@ -418,7 +318,7 @@ $(function() {
         });
     }
 
-    loadTemplate('/js/issues/issues.html', 'issues', function(err, localIssuesTemplate) {
+    loadTemplate('/js/monitors/tmpl/latest_issues.html', 'issues', function(err, localIssuesTemplate) {
         if (err) {
             return console.log(err);
         }

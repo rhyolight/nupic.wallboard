@@ -49,28 +49,73 @@ function addRunningBuildInfo(issues, builds) {
     return issues;
 }
 
-function latestIssues(req, res) {
-    var twoDaysAgo = moment().subtract(2, 'days').utc().format("YYYY-MM-DDTHH:mm:ss") + "Z"
-      , sort = {
-            sort: 'updated',
-            state: 'open',
-            since: twoDaysAgo
-        };
-    var fetchers = [function(callback) {
-        sprinter.getIssues(sort, callback);
-    }, function(callback) {
-        foreman.listRunningBuilds(callback);
-    }];
+function addBacklog(issues) {
+    _.each(issues, function(issue) {
+        if (! issue.milestone) {
+            issue.milestone = {
+                title: 'Backlog'
+            };
+        }
+    });
+    return issues;
+}
 
+function getIssues(params, callback) {
+    var fetchers = [function(callback) {
+            foreman.listRunningBuilds(callback);
+        }, function(callback) {
+            sprinter.getIssues(params, callback);
+        }];
+    // If state is all, we add another query to get all the closed issues.
+    if (params.state && params.state == 'all') {
+        params.state = 'open';
+        fetchers.push(function(callback) {
+            var closedParams = _.extend({}, params, {state: 'closed'});
+            sprinter.getIssues(closedParams, callback);
+        });
+    }
     async.parallel(fetchers, function(err, results) {
         if (err) {
-            return json.renderErrors([err], res);
+            return callback(err);
         }
-        var builds = results[1]
-          , issues = results[0];
-        json.render({
-            issues: addRunningBuildInfo(addTypes(issues), builds)
-        }, res);
+        var builds = results[0]
+            , issues = results[1];
+        if (results.length > 2) {
+            issues = _.sortBy(issues.concat(results[2]), function(issue) {
+                return new Date(issue.updated_at);
+            }).reverse();
+        }
+        callback(null, {
+            issues: addRunningBuildInfo(addBacklog(addTypes(issues)), builds)
+        });
+    });
+}
+
+function recentIssues(req, res) {
+    var twoDaysAgo = moment().subtract(2, 'days').utc().format("YYYY-MM-DDTHH:mm:ss") + "Z";
+    getIssues({
+        sort: 'updated',
+        state: 'open',
+        since: twoDaysAgo
+    }, function(err, issues) {
+        if (err) {
+            json.renderErrors([err], res);
+        } else {
+            json.render(issues, res);
+        }
+    });
+}
+
+function allIssues(req, res) {
+    getIssues({
+        sort: 'updated',
+        state: 'all'
+    }, function(err, issues) {
+        if (err) {
+            json.renderErrors([err], res);
+        } else {
+            json.render(issues, res);
+        }
     });
 }
 
@@ -79,6 +124,7 @@ module.exports = function(cfg) {
     sprinter = new Sprinter(ghUsername, ghPassword, repoNames);
     repos = cfg.repos;
     return {
-        issues: latestIssues
+        recentIssues: recentIssues,
+        allIssues: allIssues
     };
 };
