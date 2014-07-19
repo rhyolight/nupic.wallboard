@@ -46,6 +46,9 @@
     table.issues tr.misc {
         background-color: lightpink;
     }
+    table.issues span.nowrap {
+        white-space: nowrap
+    }
 
 </style>
 <table class="issues">
@@ -57,9 +60,10 @@
         <th></th>
         <th></th>
         <th></th>
-        <th>Author</th>
         <th></th>
-        <th>Assignee</th>
+        <th></th>
+        <th></th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -99,13 +103,20 @@
         </td>
         <td class="author">
             <a href="https://github.com/{{user.login}}" target="_blank">
-                <img src="{{user.avatar_url}}" title="authored by {{user.login}}"/>
+                <img src="{{user.avatar_url}}" title="created by {{user.login}}"/>
             </a>
         </td>
-        <td class="updated">{{updated}}</td>
+        <td>
+            {{#if closed}}
+            closed<br/><span class="nowrap">{{closed}}</span>
+            {{else}}
+            opened<br/><span class="nowrap">{{created}}</span>
+            {{/if}}
+        </td>
+        <td class="updated">updated<br/><span class="nowrap">{{updated}}</span></td>
         <td class="user">
             {{#if assignee}}
-                <img src="{{assignee.avatar_url}}" title="{{assignee.login}}"/>
+                <img src="{{assignee.avatar_url}}" title="assigned to {{assignee.login}}"/>
             {{else}}
                 <img src="/images/unassigned.png" title="unassigned"/>
             {{/if}}

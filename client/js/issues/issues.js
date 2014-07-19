@@ -53,9 +53,14 @@ $(function() {
     }
 
     function convertIssuesToTemplateData(issues) {
+        var now = new Date();
         return {
             issues: _.map(issues, function(issue) {
-                issue.updated = moment(issue.updated_at).from(new Date());
+                issue.updated = moment(issue.updated_at).from(now);
+                if (issue.closed_at) {
+                    issue.closed = moment(issue.closed_at).from(now)
+                }
+                issue.created = moment(issue.created_at).from(now);
                 return issue;
             })
         };

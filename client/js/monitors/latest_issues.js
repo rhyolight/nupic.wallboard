@@ -5,6 +5,11 @@ $(function() {
             response.title = 'Latest ' + response.issues.length + ' Updated Issues';
             _.each(response.issues, function(issue) {
                 issue.updated = WB.utils.timeAgo(issue.updated_at);
+                if (issue.closed_at) {
+                    issue.closed = WB.utils.timeAgo(issue.closed_at);
+                }
+                issue.created = WB.utils.timeAgo(issue.created_at);
+
             });
             template(response);
             // A bit hacky, but adding a header before the table.
