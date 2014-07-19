@@ -8,7 +8,6 @@ var path = require('path')
   , PORT = process.env.PORT || CONFIG.app.port
   , ajaxHandlerInitializer = require('./server/ajaxHandlers')
   , ajaxHandlers
-  , issueHandler = require('./server/issueHandler')
   , requestProxy = require('./server/requestProxy')
   ;
 
@@ -72,9 +71,6 @@ function startServer() {
     _.each(ajaxHandlers, function(handler, path) {
         app.get(path, handler);
     });
-
-    // Handles requests for issue reports across all repos.
-    app.get('/_issues', issueHandler(CONFIG));
 
     app.listen(PORT, function() {
         console.log('nupic.wallboard server running on\n'

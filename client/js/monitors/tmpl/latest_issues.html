@@ -1,57 +1,65 @@
 <style>
-    div.latest_issues table {
+    table.issues {
         border-collapse: collapse;
-        width: 100%;
     }
-    div.latest_issues table td {
+    table.issues td {
         padding: 0 5px;
     }
-    div.latest_issues table td.updated, div.latest_issues table td.milestone {
+    table.issues th {
+        font-size: 12pt;
+        font-weight: normal;
+    }
+    table.issues td.updated, table.issues td.milestone {
         white-space: nowrap
     }
-    div.latest_issues table td.user {
+    table.issues td.user {
         text-align: right;
         padding: 0;
     }
-    div.latest_issues table td.user img {
+    table.issues td img {
         max-width: inherit;
         width: 40px;
     }
-    div.latest_issues table td.icon {
+    table.issues td.icon {
         background-color: white;
         border: none;
     }
-    div.latest_issues table td.icon img {
+    table.issues td.icon img {
         max-width: inherit;
         width: 20px;
     }
-    div.latest_issues table td {
+    table.issues td {
         border-bottom: solid black 1px;
     }
-    div.latest_issues table tr.primary {
+    table.issues tr.primary {
         background-color: lightblue;
     }
-    div.latest_issues table tr.tooling {
+    table.issues tr.tooling {
         background-color: lightgreen;
     }
-    div.latest_issues table tr.support {
+    table.issues tr.support {
         background-color: lightyellow;
     }
-    div.latest_issues table tr.app {
+    table.issues tr.app {
         background-color: lightgray;
     }
-    div.latest_issues table tr.misc {
+    table.issues tr.misc {
         background-color: lightpink;
     }
 
 </style>
-<table>
+<table class="issues">
     <thead>
     <tr>
-        <th colspan="5">{{title}}</th>
-        <th colspan="2">
-            <a href="/issues.html" target="_blank">View All</a>
-        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Author</th>
+        <th></th>
+        <th>Assignee</th>
     </tr>
     </thead>
     <tbody>
@@ -59,9 +67,9 @@
     <tr class="{{type}}">
         <td class="icon">
             {{#if pull_request}}
-                <img src="/images/pr.png" title="pull request"/>
+            <img src="/images/pr_{{state}}.png" title="pull request"/>
             {{else}}
-                <img src="/images/issue.png" title="issue"/>
+            <img src="/images/issue_{{state}}.png" title="issue"/>
             {{/if}}
         </td>
         <td class="title">
@@ -70,6 +78,11 @@
             </a>
         </td>
         <td class="repo">{{repo}}</td>
+        <td class="labels">
+            {{#each labels}}
+            <span style="background-color:#{{color}}">{{name}}</span>
+            {{/each}}
+        </td>
         <td class="milestone">
             {{#if milestone}}
                 <a href="/issues.html#milestone={{milestone.title}}" target="_blank">
@@ -83,6 +96,11 @@
                 <img src="/images/travis-logo.png" title="Build {{id}}" class="pulsate"/>
             </a>
             {{/each}}
+        </td>
+        <td class="author">
+            <a href="https://github.com/{{user.login}}" target="_blank">
+                <img src="{{user.avatar_url}}" title="authored by {{user.login}}"/>
+            </a>
         </td>
         <td class="updated">{{updated}}</td>
         <td class="user">
