@@ -9,7 +9,7 @@ $(function() {
                     issue.closed = WB.utils.timeAgo(issue.closed_at);
                 }
                 issue.created = WB.utils.timeAgo(issue.created_at);
-
+                issue.short_repo_name = issue.repo.split('/').pop();
             });
             template(response);
             // A bit hacky, but adding a header before the table.

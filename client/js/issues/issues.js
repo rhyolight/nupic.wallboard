@@ -61,6 +61,7 @@ $(function() {
                     issue.closed = moment(issue.closed_at).from(now)
                 }
                 issue.created = moment(issue.created_at).from(now);
+                issue.short_repo_name = issue.repo.split('/').pop();
                 return issue;
             })
         };

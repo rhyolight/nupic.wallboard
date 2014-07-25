@@ -81,7 +81,9 @@
             {{title}}
             </a>
         </td>
-        <td class="repo">{{repo}}</td>
+        <td class="repo">
+            <a href="https://github.com/{{repo}}" target="_blank">{{short_repo_name}}</a>
+        </td>
         <td class="labels">
             {{#each labels}}
             <span style="background-color:#{{color}}">{{name}}</span>
