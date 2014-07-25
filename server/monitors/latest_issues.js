@@ -53,7 +53,8 @@ function addBacklog(issues) {
     _.each(issues, function(issue) {
         if (! issue.milestone) {
             issue.milestone = {
-                title: 'Backlog'
+                title: 'Backlog',
+                number: 'none'
             };
         }
     });
@@ -107,9 +108,11 @@ function recentIssues(req, res) {
 }
 
 function allIssues(req, res) {
+    var twoMonthsAgo = moment().subtract(2, 'months').utc().format("YYYY-MM-DDTHH:mm:ss") + "Z";
     getIssues({
         sort: 'updated',
-        state: 'all'
+        state: 'all',
+        since: twoMonthsAgo
     }, function(err, issues) {
         if (err) {
             json.renderErrors([err], res);
