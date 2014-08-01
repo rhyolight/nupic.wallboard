@@ -9,7 +9,6 @@ body {
     right: 0;
     width: 160px;
 }
-
 #repo-filter {
     position: absolute;
     top: 0;
@@ -34,6 +33,12 @@ body {
     right: 650px;
     width: 130px;
 }
+#label-filter {
+    position: absolute;
+    top: 0;
+    right: 780px;
+    width: 130px;
+}
 
 div.name-count {
     padding: 0 5px;
@@ -44,6 +49,8 @@ div.name-count ul {
     padding: 0;
     list-style-type: none;
     font-size: 11pt;
+    background-color: white;
+    border: solid 1px dimgrey;
 }
 div.name-count ul li {
     padding-bottom: 0;

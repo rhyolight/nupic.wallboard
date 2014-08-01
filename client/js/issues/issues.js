@@ -10,12 +10,14 @@ $(function() {
       , $milestoneFilter = $('#milestone-filter')
       , $typeFilter = $('#type-filter')
       , $stateFilter = $('#state-filter')
+      , $labelFilter = $('#label-filter')
       , filterElements = {
             assignee: $assigneeFilter,
             repo: $repoFilter,
             milestone: $milestoneFilter,
             type: $typeFilter,
-            state: $stateFilter
+            state: $stateFilter,
+            label: $labelFilter
         }
       ;
 
@@ -67,7 +69,7 @@ $(function() {
         };
     }
 
-    function extractAssignees(issues) {
+    function extractIssueAssignees(issues) {
         var all = {
             name: 'all', count: 0
         }, assignees = [];
@@ -113,8 +115,8 @@ $(function() {
         });
         return {
             items: allIssuesOut
-            , title: 'Type'
-            , type: 'type'
+          , title: 'Type'
+          , type: 'type'
         };
     }
 
@@ -136,12 +138,12 @@ $(function() {
         });
         return {
             items: allIssuesOut
-            , title: 'State'
-            , type: 'state'
+          , title: 'State'
+          , type: 'state'
         };
     }
 
-    function extractRepos(issues) {
+    function extractIssueRepos(issues) {
         var all = {
                 name: 'all', count: 0
             },
@@ -163,13 +165,13 @@ $(function() {
         reposOut.unshift(all);
         return {
             items: reposOut
-            , title: 'Repositories'
-            , type: 'repo'
+          , title: 'Repositories'
+          , type: 'repo'
         };
     }
 
 
-    function extractMilestones(issues) {
+    function extractIssueMilestones(issues) {
         var all = {
                 name: 'all', count: 0
             },
@@ -191,8 +193,36 @@ $(function() {
         });
         return {
             items: milestonesOut
-            , title: 'Sprints'
-            , type: 'milestone'
+          , title: 'Sprints'
+          , type: 'milestone'
+        };
+    }
+
+    function extractIssueLabels(issues) {
+        var all = {
+                name: 'all', count: 0
+            }
+          , labelsOut = [all];
+        _.each(issues, function(issue) {
+            _.each(issue.labels, function(label) {
+                var existingLabel = _.find(labelsOut, function(l) {
+                    return l.name == label.name;
+                });
+                if (existingLabel) {
+                    existingLabel.count++;
+                } else {
+                    labelsOut.push({
+                        name: label.name,
+                        count: 1
+                    });
+                }
+            });
+            all.count++;
+        });
+        return {
+            items: labelsOut
+          , title: 'Labels'
+          , type: 'label'
         };
     }
 
@@ -247,6 +277,7 @@ $(function() {
         // Operate upon a deep local clone so we don't modify the top-level issues when we filter.
         var filteredIssues = $.extend(true, {}, issues);
         filteredIssues = _.filter(filteredIssues, function(issue) {
+            var labelNames = _.map(issue.labels, function(label) { return label.name; });
             if (filter.milestone
                 && filter.milestone !== 'all'
                 && (issue.milestone == undefined || filter.milestone !== issue.milestone.title)) {
@@ -273,6 +304,9 @@ $(function() {
             if (filter.state && filter.state !== 'all' && filter.state !== issue.state) {
                 return false;
             }
+            if (filter.label && filter.label !== 'all' && ! _.contains(labelNames, filter.label)) {
+                return false;
+            }
             return true;
         });
         return filteredIssues;
@@ -289,13 +323,28 @@ $(function() {
         });
     }
 
+    function applyFilterHiding() {
+        var $filters = $('#filters')
+            , $filterHeaders = $filters.find('div div.name-count h3')
+            , $filterLists = $filters.find('div div.name-count ul')
+            ;
+        $filterHeaders.on('mouseover', function() {
+            $(this).parent().find('ul').slideDown();
+        });
+        $filterHeaders.on('click', function() {
+            $(this).parent().find('ul').slideUp();
+        });
+        $filterLists.slideUp();
+    }
+
     function render(issues, filter) {
         var issuesData = convertIssuesToTemplateData(issues)
-          , assignees = extractAssignees(issues)
-          , repos = extractRepos(issues)
-          , milestones = extractMilestones(issues)
+          , assignees = extractIssueAssignees(issues)
+          , repos = extractIssueRepos(issues)
+          , milestones = extractIssueMilestones(issues)
           , types = extractIssueTypes(issues)
           , states = extractIssueStates(issues)
+          , labels = extractIssueLabels(issues)
           ;
         renderTemplate($issues, issuesTemplate, issuesData);
         renderTemplate($assigneeFilter, nameCountTemplate, assignees);
@@ -303,8 +352,10 @@ $(function() {
         renderTemplate($milestoneFilter, nameCountTemplate, milestones);
         renderTemplate($typeFilter, nameCountTemplate, types);
         renderTemplate($stateFilter, nameCountTemplate, states);
+        renderTemplate($labelFilter, nameCountTemplate, labels);
         addFilterClickHandling();
         updateFilterLinks(filter);
+        applyFilterHiding();
     }
 
     function loadPage(loadingMessage, callback) {
