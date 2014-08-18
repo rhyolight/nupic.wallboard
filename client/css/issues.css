@@ -136,6 +136,9 @@ table.issues tr.app {
 table.issues tr.misc {
     background-color: lightpink;
 }
+table.issues tr.port {
+    background-color: sandybrown;
+}
 td.labels span {
     white-space: nowrap;
     border-radius: 3px;
