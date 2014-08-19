@@ -11,6 +11,7 @@ $(function() {
       , $typeFilter = $('#type-filter')
       , $stateFilter = $('#state-filter')
       , $labelFilter = $('#label-filter')
+      , $issueFilters = $('#issue-filters')
       , filterElements = {
             assignee: $assigneeFilter,
             repo: $repoFilter,
@@ -202,7 +203,7 @@ $(function() {
         var all = {
                 name: 'all', count: 0
             }
-          , labelsOut = [all];
+          , labelsOut = [];
         _.each(issues, function(issue) {
             _.each(issue.labels, function(label) {
                 var existingLabel = _.find(labelsOut, function(l) {
@@ -219,6 +220,8 @@ $(function() {
             });
             all.count++;
         });
+        labelsOut = _.sortBy(labelsOut, function(l) { return l.name; });
+        labelsOut.unshift(all);
         return {
             items: labelsOut
           , title: 'Labels'
@@ -234,7 +237,7 @@ $(function() {
         }
         _.each(filterElements, function($filterElement, filterType) {
             // On filter click, filters all issues by filter type clicked.
-            $filterElement.find('div.name-count ul li').click(function(event) {
+            $filterElement.find('ul li').click(function(event) {
                 var filter = getLocalFilter(event, filterType);
                 render(filterIssues(allIssues, filter), filter);
             });
@@ -244,13 +247,13 @@ $(function() {
     function updateFilterLinks(filter) {
         _.each(filterElements, function($filterElement, filterType) {
             // Remove any selections on current filter triggers
-            $filterElement.find('div.name-count ul li').removeClass('selected');
-            // Add selected to chosen filters.
-            $filterElement.find('div.name-count ul li[data-name=\'' + filter[filterType] + '\']').addClass('selected');
+            $filterElement.find('ul li').removeClass('active');
+            // Add active to chosen filters.
+            $filterElement.find('ul li[data-name=\'' + filter[filterType] + '\']').addClass('active');
         });
 
         // Update href links with new filter
-        $('div.name-count ul li').each(function() {
+        $issueFilters.find('ul li.name-count ul li').each(function() {
             var $item = $(this)
               , $link = $item.find('a')
               , pieces = $link.attr('href').split('#')
@@ -323,20 +326,6 @@ $(function() {
         });
     }
 
-    function applyFilterHiding() {
-        var $filters = $('#filters')
-            , $filterHeaders = $filters.find('div div.name-count h3')
-            , $filterLists = $filters.find('div div.name-count ul')
-            ;
-        $filterHeaders.on('mouseover', function() {
-            $(this).parent().find('ul').slideDown();
-        });
-        $filterHeaders.on('click', function() {
-            $(this).parent().find('ul').slideUp();
-        });
-        $filterLists.slideUp();
-    }
-
     function render(issues, filter) {
         var issuesData = convertIssuesToTemplateData(issues)
           , assignees = extractIssueAssignees(issues)
@@ -355,14 +344,10 @@ $(function() {
         renderTemplate($labelFilter, nameCountTemplate, labels);
         addFilterClickHandling();
         updateFilterLinks(filter);
-        applyFilterHiding();
     }
 
     function loadPage(loadingMessage, callback) {
         $issues.html("<h2>" + loadingMessage + "</h2>");
-        _.each(filterElements, function($filterElement) {
-            $filterElement.html("<p>" + loadingMessage + "</p>");
-        });
         $.getJSON('/_monitorRequest/latest_issues/allIssues', function(response) {
             // Keep this as the master copy to start fresh when filters are applied.
             allIssues = response.issues;

@@ -1,16 +1,12 @@
-<div class="name-count">
-
-    <h3>{{title}}</h3>
-    <ul>
-        {{#each items}}
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{title}} <span class="caret"></span></a>
+<ul class="dropdown-menu" role="menu">
+    {{#each items}}
         <li data-name="{{name}}" data-type="{{../type}}">
-        <span><a href="#{{../type}}={{name}}">{{name}}</a>
+        <a href="#{{../type}}={{name}}">{{name}}
         {{#if count}}
             ({{count}})
         {{/if}}
-        </span>
+        </a>
         </li>
-        {{/each}}
-    </ul>
-
-</div>
+    {{/each}}
+</ul>

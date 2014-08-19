@@ -1,63 +1,6 @@
 body {
-    margin-left: 20px;
+    margin: 0 20px;
     padding: 0;
-}
-
-#assignee-filter {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 160px;
-}
-#repo-filter {
-    position: absolute;
-    top: 0;
-    right: 160px;
-    width: 200px;
-}
-#milestone-filter {
-    position: absolute;
-    top: 0;
-    right: 360px;
-    width: 130px;
-}
-#type-filter {
-    position: absolute;
-    top: 0;
-    right: 490px;
-    width: 160px;
-}
-#state-filter {
-    position: absolute;
-    top: 0;
-    right: 650px;
-    width: 130px;
-}
-#label-filter {
-    position: absolute;
-    top: 0;
-    right: 780px;
-    width: 130px;
-}
-
-div.name-count {
-    padding: 0 5px;
-}
-
-div.name-count ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    font-size: 11pt;
-    background-color: white;
-    border: solid 1px dimgrey;
-}
-div.name-count ul li {
-    padding-bottom: 0;
-    text-align:left;
-}
-div.name-count ul li.selected {
-    font-weight: bold;
 }
 
 table.issues {
@@ -69,7 +12,6 @@ table.issues tr th {
     text-align: center;
 }
 table.issues td.icon {
-    max-width: 20px;
     width: 20px;
     background-repeat: no-repeat;
     background-position: center;
