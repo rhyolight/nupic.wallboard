@@ -65,6 +65,11 @@ $(function() {
                 }
                 issue.created = moment(issue.created_at).from(now);
                 issue.short_repo_name = issue.repo.split('/').pop();
+                _.each(issue.builds, function(build) {
+                    if (build.state == 'started') {
+                        build.cssClass = 'pulsate';
+                    }
+                });
                 return issue;
             })
         };

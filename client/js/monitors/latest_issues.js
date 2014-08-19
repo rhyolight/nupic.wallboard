@@ -10,6 +10,12 @@ $(function() {
                 }
                 issue.created = WB.utils.timeAgo(issue.created_at);
                 issue.short_repo_name = issue.repo.split('/').pop();
+                issue.cssClass = '';
+                _.each(issue.builds, function(build) {
+                    if (build.state == 'started') {
+                        build.cssClass = 'pulsate';
+                    }
+                });
             });
             template(response);
             // A bit hacky, but adding a header before the table.
