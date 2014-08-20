@@ -80,7 +80,7 @@ function getIssues(params, callback) {
             return callback(err);
         }
         var builds = results[0]
-            , issues = results[1];
+          , issues = results[1];
         if (results.length > 2) {
             issues = _.sortBy(issues.concat(results[2]), function(issue) {
                 return new Date(issue.updated_at);
@@ -95,9 +95,9 @@ function getIssues(params, callback) {
 function recentIssues(req, res) {
     var twoDaysAgo = moment().subtract(2, 'days').utc().format("YYYY-MM-DDTHH:mm:ss") + "Z";
     getIssues({
-        sort: 'updated',
-        state: 'open',
-        since: twoDaysAgo
+        sort: 'updated'
+      , state: 'open'
+      , since: twoDaysAgo
     }, function(err, issues) {
         if (err) {
             json.renderErrors([err], res);
@@ -107,12 +107,46 @@ function recentIssues(req, res) {
     });
 }
 
+function staleIssues(req, res) {
+    var twoMonthsAgo = moment().subtract(2, 'months');
+    getIssues({
+        sort: 'updated'
+    }, function(err, results) {
+        var issues = results.issues;
+        if (err) {
+            json.renderErrors([err], res);
+        } else {
+            results.issues = _.filter(issues, function(issue) {
+                return new Date(issue.updated_at) < twoMonthsAgo;
+            });
+            json.render(results, res);
+        }
+    });
+}
+
+function oldIssues(req, res) {
+    var sixMonthsAgo = moment().subtract(6, 'months');
+    getIssues({
+        sort: 'created'
+    }, function(err, results) {
+        var issues = results.issues;
+        if (err) {
+            json.renderErrors([err], res);
+        } else {
+            results.issues = _.filter(issues, function(issue) {
+                return new Date(issue.created_at) < sixMonthsAgo;
+            });
+            json.render(results, res);
+        }
+    });
+}
+
 function allIssues(req, res) {
     var twoMonthsAgo = moment().subtract(2, 'months').utc().format("YYYY-MM-DDTHH:mm:ss") + "Z";
     getIssues({
-        sort: 'updated',
-        state: 'all',
-        since: twoMonthsAgo
+        sort: 'updated'
+      , state: 'all'
+      , since: twoMonthsAgo
     }, function(err, issues) {
         if (err) {
             json.renderErrors([err], res);
@@ -127,7 +161,9 @@ module.exports = function(cfg) {
     sprinter = new Sprinter(ghUsername, ghPassword, repoNames);
     repos = cfg.repos;
     return {
-        recentIssues: recentIssues,
-        allIssues: allIssues
+        recentIssues: recentIssues
+      , allIssues: allIssues
+      , staleIssues: staleIssues
+      , oldIssues: oldIssues
     };
 };
