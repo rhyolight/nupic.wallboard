@@ -352,16 +352,35 @@ $(function() {
     }
 
     function loadPage(loadingMessage, callback) {
-        $issues.html("<h2>" + loadingMessage + "</h2>");
-        $.getJSON('/_monitorRequest/latest_issues/allIssues', function(response) {
+        var filter = extractFilterFrom(window.location.hash)
+          , affliction = filter.affliction
+          , issuesUrl = '/_monitorRequest/latest_issues/allIssues';
+        // Old issues were created_at a long time ago.
+        if (affliction == 'old') {
+            issuesUrl = '/_monitorRequest/latest_issues/oldIssues';
+        }
+        // Stale issues were updated_at a long time ago.
+        else if (affliction == 'stale') {
+            issuesUrl = '/_monitorRequest/latest_issues/staleIssues';
+        }
+        $issues.html('<h2>' + loadingMessage + '</h2>');
+        $.getJSON(issuesUrl, function(response) {
             // Keep this as the master copy to start fresh when filters are applied.
             allIssues = response.issues;
             addGhostUnassigned(allIssues);
-            var filter = extractFilterFrom(window.location.hash);
             render(filterIssues(allIssues, filter), filter);
             if (callback) {
                 callback();
             }
+        });
+    }
+
+    function addAfflictionClickHandling() {
+        $('li.affliction ul li a').click(function() {
+            var $link = $(this)
+              , href = $link.attr('href');
+            window.location.hash = href;
+            location.reload(true);
         });
     }
 
@@ -376,6 +395,7 @@ $(function() {
             }
             nameCountTemplate = localNameCountTemplate;
             loadPage("Loading...", function() {
+                addAfflictionClickHandling();
                 setInterval(function() {
                     loadPage("Reloading...");
                 }, REFRESH_RATE);
