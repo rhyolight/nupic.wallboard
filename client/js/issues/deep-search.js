@@ -107,6 +107,7 @@ $(function() {
 
     function renderFilters(data, template) {
         renderTemplate($assigneeFilter, template, data.collaborators);
+        renderTemplate($labelFilter, template, data.labels);
     }
 
     function convertToTemplateData(data) {
@@ -115,10 +116,26 @@ $(function() {
           , type: 'assignee'
           , items: []
         };
+        var labels = {
+            title: 'Label'
+          , type: 'label'
+          , items: []
+        };
         _.each(data.collaborators, function(collaborator) {
             collaborators.items.push({name: collaborator.login});
         });
         data.collaborators = collaborators;
+
+        _.each(_.sortBy(data.labels, function(label) {
+            return label.name;
+        }), function(label) {
+            labels.items.push({
+                name: label.name
+              , color: label.color
+            });
+        });
+        data.collaborators = collaborators;
+        data.labels = labels;
         return data;
     }
 
