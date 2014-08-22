@@ -396,9 +396,10 @@ $(function() {
             nameCountTemplate = localNameCountTemplate;
             loadPage("Loading...", function() {
                 addAfflictionClickHandling();
-                setInterval(function() {
-                    loadPage("Reloading...");
-                }, REFRESH_RATE);
+                // Turned off auto-refresh because it pisses me off during sprint planning.
+//                setInterval(function() {
+//                    loadPage("Reloading...");
+//                }, REFRESH_RATE);
             });
         });
     });
