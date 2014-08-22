@@ -156,6 +156,24 @@ function allIssues(req, res) {
     });
 }
 
+function deepSearch(req, res) {
+    var filter = req.query.filter;
+    console.log(filter);
+    res.end();
+//    getIssues({
+//        sort: 'updated'
+//        , state: 'all'
+//        , since: twoMonthsAgo
+//    }, function(err, issues) {
+//        if (err) {
+//            json.renderErrors([err], res);
+//        } else {
+//            json.render(issues, res);
+//        }
+//    });
+}
+
+
 module.exports = function(cfg) {
     var repoNames = _.map(cfg.repos, function(repo) { return repo.slug; });
     sprinter = new Sprinter(ghUsername, ghPassword, repoNames);
@@ -165,5 +183,6 @@ module.exports = function(cfg) {
       , allIssues: allIssues
       , staleIssues: staleIssues
       , oldIssues: oldIssues
+      , deepSearch: deepSearch
     };
 };

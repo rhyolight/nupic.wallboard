@@ -3,9 +3,7 @@
 node_modules
 config/runtime.json
 # These HTML files are generated
-client/index.html
-client/builds.html
-client/issues.html
+client/*.html
 
 *.sublime-project
 *.sublime-workspace

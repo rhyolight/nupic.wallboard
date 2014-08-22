@@ -87,5 +87,6 @@ getGlobalRepos(CONFIG.repos_url, function(err, repos) {
     ajaxHandlers = ajaxHandlerInitializer(CONFIG);
     writeHtmlTemplate('index', 'nupic');
     writeHtmlTemplate('issues', 'issues');
+    writeHtmlTemplate('deepSearch', 'deepSearch');
     startServer();
 });
