@@ -157,20 +157,21 @@ function allIssues(req, res) {
 }
 
 function deepSearch(req, res) {
-    var filter = req.query.filter;
+    var filter = req.query;
+    // Delete any filters that say "all".
+    _.each(_.keys(filter), function(name) {
+        if (filter[name] == 'all') {
+            delete filter[name];
+        }
+    });
     console.log(filter);
-    res.end();
-//    getIssues({
-//        sort: 'updated'
-//        , state: 'all'
-//        , since: twoMonthsAgo
-//    }, function(err, issues) {
-//        if (err) {
-//            json.renderErrors([err], res);
-//        } else {
-//            json.render(issues, res);
-//        }
-//    });
+    getIssues(filter, function(err, issues) {
+        if (err) {
+            json.renderErrors([err], res);
+        } else {
+            json.render(issues, res);
+        }
+    });
 }
 
 
