@@ -93,6 +93,5 @@ getGlobalRepos(CONFIG.repos_url, function(err, repos) {
     normalizeConfig(CONFIG);
     ajaxHandlers = ajaxHandlerInitializer(CONFIG);
     writeHtmlTemplate('index', 'nupic');
-    writeHtmlTemplate('issues', 'issues');
     startServer();
 });
