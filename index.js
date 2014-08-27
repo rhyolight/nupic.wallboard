@@ -9,6 +9,7 @@ var path = require('path')
   , ajaxHandlerInitializer = require('./server/ajaxHandlers')
   , ajaxHandlers
   , requestProxy = require('./server/requestProxy')
+  , SprinterDash = require('sprinter-dash')
   ;
 
 
@@ -71,6 +72,12 @@ function startServer() {
     _.each(ajaxHandlers, function(handler, path) {
         app.get(path, handler);
     });
+
+    dash = new SprinterDash({
+        repos: CONFIG.repos
+      , title: 'Numenta OS Issues'
+    });
+    dash.attach(app, '/');
 
     app.listen(PORT, function() {
         console.log('nupic.wallboard server running on\n'
