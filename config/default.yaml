@@ -14,6 +14,9 @@
     latest_issues:
       type: latest_issues
       refresh_rate: 600
+      options:
+        # This is coming from sprinter-dash.
+        template: "/client/templates/issues.html"
 
     running_builds:
       type: running_builds
