@@ -114,7 +114,7 @@ $(function() {
             },
             failure: callback
         });
-    };
+    }
 
     function loadScript(script, namespace, callback) {
         $.getScript(script)
@@ -174,6 +174,10 @@ $(function() {
               , namespace = scriptName.split('.').shift()
               , templatePath = scriptDirectory + '/tmpl/' + namespace + '.html'
               ;
+            // Monitor config might have a specific template location.
+            if (monitorConfig.options && monitorConfig.options.template) {
+                templatePath = monitorConfig.options.template;
+            }
             async.parallel([
                 function(callback) {
                     loadScript(scriptPath, namespace, callback);
