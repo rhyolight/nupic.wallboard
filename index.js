@@ -75,6 +75,7 @@ function startServer() {
 
     dash = new SprinterDash({
         repos: CONFIG.repos
+      , travisOrg: 'numenta'
       , title: 'Numenta OS Issues'
     });
     dash.attach(app, '/');

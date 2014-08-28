@@ -22,7 +22,7 @@
     "js-yaml": "3.1.0",
     "moment": "2.7.0",
     "request": "2.29.0",
-    "sprinter-dash": "0.1.2",
+    "sprinter-dash": "^0.1.5",
     "sprinter": "^0.1.13",
     "travis-ci": "1.1.1",
     "travis-foreman": "0.0.3",
