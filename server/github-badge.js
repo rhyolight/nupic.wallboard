@@ -51,9 +51,13 @@ function handler(req, res) {
                     status = 'no issue for "' + repo + '/' + number + '"';
                 }
             } else {
-              subject = cleanString(githubResponse.title);
-              status = cleanString(githubResponse.state);
-              color = 'green';
+                subject = cleanString(githubResponse.title);
+                status = cleanString(githubResponse.state);
+                if (githubResponse.state == 'open') {
+                    color = 'orange';
+                } else {
+                    color = 'blue';
+                }
             }
 
             badge = 'http://img.shields.io/badge/' 
