@@ -3,7 +3,8 @@ var githubAPI = require('github')
         version: '3.0.0',
         timeout: 5000
     })
-  , json = require('../utils/json');
+  , json = require('../utils/json')
+  , CONFIG;
 
 function labels(req, res) {
     var owner = req.query.owner

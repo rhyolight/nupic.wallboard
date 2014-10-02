@@ -10,6 +10,7 @@ var path = require('path')
   , ajaxHandlers
   , requestProxy = require('./server/requestProxy')
   , SprinterDash = require('sprinter-dash')
+  , githubBadge = require('./server/github-badge')
   ;
 
 
@@ -65,6 +66,7 @@ function startServer() {
         .use(express.json())
         .use(express.urlencoded())
         .use(express.static(__dirname + '/client'))
+        .get('/github-badge/:repo/:issue', githubBadge(CONFIG))
         // HTTP request proxy
         .use(requestProxy());
 
