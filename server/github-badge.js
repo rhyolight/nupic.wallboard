@@ -14,7 +14,14 @@ function handler(req, res) {
     var owner = 'numenta'
       , repo = req.params.repo
       , number = req.params.issue
+      , linkRedirect = true
       ;
+
+    if (number.indexOf('.svg') > -1 && number.indexOf('.svg') == number.length - 4) {
+        linkRedirect = false;
+        number = number.substr(0, number.length - 4);
+    }
+
     github.authenticate({
         type: 'basic',
         username: CONFIG.github.username,
@@ -29,26 +36,35 @@ function handler(req, res) {
           , status
           , color
           , badge;
-        if (err) {
-            subject = 'Github Issue Problem';
-            status = 'unknown error ';
-            color = 'lightgrey';
-            if (err.code && err.code == 404) {
-                status = 'no issue for "' + repo + '/' + number + '"';
-            }
+
+        if (! err && linkRedirect) {
+            res.writeHead(302, {
+                'Location': githubResponse.html_url
+            });
+            res.end();
         } else {
-          subject = cleanString(githubResponse.title);
-          status = cleanString(githubResponse.state);
-          color = 'green';
+            if (err) {
+                subject = 'Github Issue Problem';
+                status = 'unknown error ';
+                color = 'lightgrey';
+                if (err.code && err.code == 404) {
+                    status = 'no issue for "' + repo + '/' + number + '"';
+                }
+            } else {
+              subject = cleanString(githubResponse.title);
+              status = cleanString(githubResponse.state);
+              color = 'green';
+            }
+
+            badge = 'http://img.shields.io/badge/' 
+                + subject + '-' + status + '-' + color + '.svg?style=flat-square';
+
+            res.writeHead(302, {
+                'Location': badge
+            });
+            res.end();
         }
 
-        badge = 'http://img.shields.io/badge/' 
-            + subject + '-' + status + '-' + color + '.svg?style=flat-square';
-
-        res.writeHead(302, {
-            'Location': badge
-        });
-        res.end();
     });
 
 }
