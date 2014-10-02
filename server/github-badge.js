@@ -1,4 +1,5 @@
 var githubAPI = require('github')
+  , _ = require('underscore')
   , github = new githubAPI({
         version: '3.0.0',
         timeout: 5000
@@ -32,7 +33,8 @@ function handler(req, res) {
         repo: repo,
         number: number
     }, function(err, githubResponse) {
-        var subject
+        var priorityLabels
+          , subject
           , status
           , color
           , badge;
@@ -53,11 +55,22 @@ function handler(req, res) {
             } else {
                 subject = cleanString(githubResponse.title);
                 status = cleanString(githubResponse.state);
-                if (githubResponse.state == 'open') {
-                    color = 'orange';
-                } else {
+
+                if (githubResponse.state != 'open') {
                     color = 'blue';
+                } else {
+                    priorityLabels = _.filter(githubResponse.labels, function(label) {
+                        return ['P1','P2','P3','P4'].indexOf(label.name) > -1;
+                    });
+                    if (priorityLabels.length) {
+                        color = priorityLabels[0].color;
+                        status = priorityLabels[0].name;
+                    } else {
+                        color = 'lightgrey';
+                        status = 'unprioritized';
+                    }
                 }
+
             }
 
             badge = 'http://img.shields.io/badge/' 
