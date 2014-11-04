@@ -8,23 +8,16 @@ var _ = require('underscore')
   , monitors = {}
   ;
 
-/*
- * Handler functions 
- */
-
-/**
- * Lists all the monitors available to the client.
- */
-function listMonitors(req, res) {
-    var monitors = _.clone(CONFIG.monitors)
+function getMonitors(monitorConfig, callback) {
+    var monitors = _.clone(monitorConfig)
       , monitorDir = path.join(__dirname, '..', 'client', 'js', 'monitors')
       ;
     fs.readdir(monitorDir, function(err, files) {
         var monitorData = {}
-          , jsFiles = _.filter(files, function(file) {
+            , jsFiles = _.filter(files, function(file) {
                 return /\.js$/.test(file);
             })
-          ;
+            ;
         _.each(monitors, function(monitorConfig, monitorId) {
             monitorData[monitorId] = monitorConfig;
             monitorData[monitorId].js = '/js/monitors/' + _.find(jsFiles, function(jsFile) {
@@ -33,6 +26,19 @@ function listMonitors(req, res) {
             // TODO: We could put the html (and possibly css) file(s) here after
             //       checking to ensure they exist.
         });
+        callback(monitorData);
+    });
+}
+
+/*
+ * Handler functions 
+ */
+
+/**
+ * Lists all the monitors available to the client.
+ */
+function listMonitors(req, res) {
+    getMonitors(CONFIG.monitors, function(monitorData) {
         json.render(monitorData, res);
     });
 }
@@ -62,4 +68,7 @@ function initializer(config) {
     }
 }
 
-module.exports = initializer;
+module.exports = {
+    initializer: initializer
+  , getMonitors: getMonitors
+};

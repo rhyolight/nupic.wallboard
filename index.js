@@ -1,12 +1,13 @@
 var path = require('path')
   , fs = require('fs')
   , _ = require('underscore')
+  , Handlebars = require('handlebars')
   , request = require('request')
   , yaml = require('js-yaml')
   , express = require('express')
   , CONFIG =  require('config')
   , PORT = process.env.PORT || CONFIG.app.port
-  , ajaxHandlerInitializer = require('./server/ajaxHandlers')
+  , ajaxHandlersContainer = require('./server/ajaxHandlers')
   , ajaxHandlers
   , requestProxy = require('./server/requestProxy')
   , SprinterDash = require('sprinter-dash')
@@ -59,6 +60,23 @@ function normalizeConfig(cfg) {
     };
 }
 
+function generateOneMonitorPageHandler(config, callback) {
+    ajaxHandlersContainer.getMonitors(config.monitors, function(monitors) {
+        var templateHtml = fs.readFileSync(path.join(__dirname, 'layouts/monitor.html'), 'utf-8')
+          , template = Handlebars.compile(templateHtml);
+        callback(function(req, res) {
+            var monitor = req.params.monitorName
+              , monitorConfig = monitors[monitor]
+              , body = template({
+                  monitorName: monitor
+                , monitorConfig: JSON.stringify(monitorConfig)
+              })
+              ;
+            res.end(body);
+        });
+    });
+}
+
 function startServer() {
     console.log('starting server');
 
@@ -70,22 +88,27 @@ function startServer() {
         // HTTP request proxy
         .use(requestProxy());
 
-    // Adding handling for system ajax calls.
-    _.each(ajaxHandlers, function(handler, path) {
-        app.get(path, handler);
-    });
+    generateOneMonitorPageHandler(CONFIG, function(oneMonitorHandler) {
+        app.get('/monitor/:monitorName', oneMonitorHandler);
+        // Adding handling for system ajax calls.
+        _.each(ajaxHandlers, function(handler, path) {
+            app.get(path, handler);
+        });
 
-    dash = new SprinterDash({
-        repos: CONFIG.repos
-      , travisOrg: 'numenta'
-      , title: 'Numenta OS Issues'
-    });
-    dash.attach(app, '/');
+        dash = new SprinterDash({
+            repos: CONFIG.repos
+            , travisOrg: 'numenta'
+            , title: 'Numenta OS Issues'
+        });
+        dash.attach(app, '/');
 
-    app.listen(PORT, function() {
-        console.log('nupic.wallboard server running on\n'
+        app.listen(PORT, function() {
+            console.log('nupic.wallboard server running on\n'
             + '\thttp://localhost:' + PORT);
         });
+
+    });
+
 }
 
 getGlobalRepos(CONFIG.repos_url, function(err, repos) {
@@ -94,8 +117,7 @@ getGlobalRepos(CONFIG.repos_url, function(err, repos) {
     }
     CONFIG.repos = repos;
     normalizeConfig(CONFIG);
-    ajaxHandlers = ajaxHandlerInitializer(CONFIG);
+    ajaxHandlers = ajaxHandlersContainer.initializer(CONFIG);
     writeHtmlTemplate('index', 'nupic');
-    writeHtmlTemplate('builds', 'builds');
     startServer();
 });

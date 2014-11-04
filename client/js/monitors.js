@@ -165,66 +165,79 @@ $(function() {
         }
     }
 
-    $.get('/_listMonitors', function(monitors) {
-        _.each(monitors, function(monitorConfig, monitorId) {
-            var scriptPath = monitorConfig.js
-              , loadingHtml = '<img src="/images/ajax-loader.gif" alt="loading"/>'
-              , scriptName = scriptPath.split('/').pop()
-              , scriptDirectory = scriptPath.substr(0, scriptPath.length - scriptName.length)
-              , namespace = scriptName.split('.').shift()
-              , templatePath = scriptDirectory + '/tmpl/' + namespace + '.html'
-              ;
-            // Monitor config might have a specific template location.
-            if (monitorConfig.options && monitorConfig.options.template) {
-                templatePath = monitorConfig.options.template;
+    function loadMonitor(monitorConfig, monitorId, monitorEl) {
+        var scriptPath = monitorConfig.js
+          , loadingHtml = '<img src="/images/ajax-loader.gif" alt="loading"/>'
+          , scriptName = scriptPath.split('/').pop()
+          , scriptDirectory = scriptPath.substr(0, scriptPath.length - scriptName.length)
+          , namespace = scriptName.split('.').shift()
+          , renderedHtml
+          , templatePath = scriptDirectory + '/tmpl/' + namespace + '.html'
+          , $monitorEl
+          ;
+        if (monitorEl && typeof(monitorEl) == 'string') {
+            $monitorEl = $('#' + monitorEl);
+        } else {
+            $monitorEl = $('#' + monitorId);
+        }
+        // Monitor config might have a specific template location.
+        if (monitorConfig.options && monitorConfig.options.template) {
+            templatePath = monitorConfig.options.template;
+        }
+        async.parallel([
+            function(callback) {
+                loadScript(scriptPath, namespace, callback);
             }
-            async.parallel([
-                function(callback) {
-                    loadScript(scriptPath, namespace, callback);
+            , function(callback) {
+                loadTemplate(templatePath, namespace, callback);
+            }
+        ], function(err) {
+            if (err) throw err;
+            var serverProxy = {
+                    get: function(command, data, callback) {
+                        $.ajax({
+                            method: 'get'
+                          , url: '/_monitorRequest/' + namespace + '/' + command
+                          , data: data
+                          , success: callback
+                        });
+                    }
                 }
-              , function(callback) {
-                    loadTemplate(templatePath, namespace, callback);
+              , template = Handlebars.compile($('#' + namespace + '_tmpl').html())
+              , render = function(data) {
+                  data.namespace = namespace;
+                  renderedHtml = monitorWrapTopTmplNoId({
+                      namespace: namespace
+                  }) + template(data) + monitorWrapBottom
+                  $monitorEl.html(renderedHtml);
+//                      reportMonitorStatus(monitorId, data.status);
               }
-            ], function(err) {
-                if (err) throw err;
-                var $monitorEl = $('#' + monitorId)
-                  , serverProxy = {
-                        get: function(command, data, callback) {
-                            $.ajax({
-                                  method: 'get'
-                                , url: '/_monitorRequest/' + namespace + '/' + command
-                                , data: data
-                                , success: callback
-                            });
-                        }
-                    }
-                  , template = Handlebars.compile($('#' + namespace + '_tmpl').html())
-                  , render = function(data) {
-                        var renderedHtml;
-                        data.namespace = namespace;
-                        renderedHtml = monitorWrapTopTmplNoId({
-                            namespace: namespace
-                        }) + template(data) + monitorWrapBottom
-                        $('#' + monitorId).html(renderedHtml);
-//                        reportMonitorStatus(monitorId, data.status);
-                    }
-                  ;
-                if (! $monitorEl.length) {
-                    renderedHtml = monitorWrapTopTmpl({
-                        id: monitorId, namespace: namespace
-                    }) + loadingHtml + monitorWrapBottom
-                    $monitors.append(renderedHtml);
-                } else {
-                    $monitorEl.html(loadingHtml);
-                }
-                WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
-                if (monitorConfig.refresh_rate) {
-                    setInterval(function() {
-                        WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
-                    }, monitorConfig.refresh_rate * 1000);
-                }
-            });
+              ;
+            if (! $monitorEl.length) {
+                renderedHtml = monitorWrapTopTmpl({
+                    id: monitorId, namespace: namespace
+                }) + loadingHtml + monitorWrapBottom
+                $monitors.append(renderedHtml);
+            } else {
+                $monitorEl.html(loadingHtml);
+            }
+            WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
+            if (monitorConfig.refresh_rate) {
+                setInterval(function() {
+                    WB[namespace](monitorId, monitorConfig.options, serverProxy, render);
+                }, monitorConfig.refresh_rate * 1000);
+            }
         });
-    });
+
+    }
+
+    if (window.__WB_one_monitor) {
+        loadMonitor.apply(null, window.__WB_one_monitor);
+    } else {
+        $.get('/_listMonitors', function(monitors) {
+            _.each(monitors, loadMonitor);
+        });
+    }
+
 
 });
