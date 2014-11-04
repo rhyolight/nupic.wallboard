@@ -101,6 +101,6 @@
         name: "nupic.core"
         url: "http://numenta.org/docs/nupic.core"
 
-#    nupic_pr_report:
-#      type: "pr_report"
-#      refresh_rate: 600
+    nupic_pr_report:
+      type: "pr_report"
+      refresh_rate: 600
