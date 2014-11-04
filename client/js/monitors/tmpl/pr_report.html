@@ -1,13 +1,6 @@
 <style>
-.pr_report td  {
-    width: 20%;
-}
-.pr_report td:first-child  {
-    width: 50%;
-}
-.pr_report td:last-child   {
-    width: 30%;
-    text-align: right;
+.pr_report th.title {
+    width: 65%;
 }
 .pull-request {
     margin-bottom:10px;
@@ -107,35 +100,33 @@
         {{/if}}
         <table width="100%"><tbody>
             <tr>
-                <th>
-                    <a target="_blank" href="{{html_url}}">{{title}}</a>
-                </th>
-                <th class="right avatar" colspan="2">
+                <td class="avatar">
                     <a href="http://github.com/{{user.login}}" target="_blank" title="assigned to {{user.login}}">
                         <img src="{{user.avatar_url}}"/>
                     </a>
+                </td>
+                <th class="title">
+                    <a target="_blank" href="{{html_url}}">{{title}}</a>
                 </th>
-            </tr>
-            <tr>
                 <td>Opened <span class="open-since">{{created_at}}</span></td>
                 <td class="revalidate">
                     <a href="{{../validateUrl}}?sha={{head.sha}}&repo={{repo}}&postStatus=1" target="_blank">revalidate</a>
                 </td>
                 <td>
                     {{#if latest_status}}
-                        <div class="status">
-                            Build Status: <span class="{{latest_status.state}}"><a href="{{latest_status.html_url}}" target="_blank" title="Latest Travis-CI Build">{{latest_status.state}}</a></span>
-                        </div>
+                    <div class="status">
+                        Build Status: <span class="{{latest_status.state}}"><a href="{{latest_status.html_url}}" target="_blank" title="Latest Travis-CI Build">{{latest_status.state}}</a></span>
+                    </div>
                     {{else}}
-                        <div class="status">
-                            Build Status: <span class="unknown">unknown</span>
-                        </div>
+                    <div class="status">
+                        Build Status: <span class="unknown">unknown</span>
+                    </div>
                     {{/if}}
                 </td>
             </tr>
             {{#if labels}}
             <tr class="labels">
-                <td colspan="3">
+                <td colspan="5">
                 {{#labels}}
                     <span class="label" style="background-color:#{{color}};">{{name}}</span>
                 {{/labels}}

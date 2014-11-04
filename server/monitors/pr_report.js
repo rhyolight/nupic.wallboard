@@ -14,14 +14,14 @@ function buildTravisUrl(repoSlug, buildId) {
     return 'https://travis-ci.org/' + repoSlug + '/builds/' + buildId;
 }
 
-function addLatestBuildInfo(issues, builds) {
+function addLatestBuildInfo(prs, builds) {
     if (!builds) {
-        return issues;
+        return prs;
     }
     _.each(builds, function(repoBuilds, repo) {
-        _.each(issues, function(issue) {
+        _.each(prs, function(issue) {
             _.each(repoBuilds, function(build) {
-                if(issue.pull_request && build.pull_request && issue.repo.indexOf(repo) > -1) {
+                if(build.pull_request && issue.repo.indexOf(repo) > -1) {
                     if (build.pull_request_number == issue.number) {
                         if (! foreman || ! issue.builds) {
                             issue.builds = [];
@@ -33,7 +33,7 @@ function addLatestBuildInfo(issues, builds) {
             });
         });
     });
-    return issues;
+    return prs;
 }
 
 function getPrs(params, callback) {
@@ -74,14 +74,12 @@ marked.setOptions({
 
 function getPullRequests(req, res) {
     var sixMonthsAgo = moment().subtract(6, 'months');
-//    console.log('getting pulls');
     getPrs({
         since: sixMonthsAgo
     }, function(err, prs) {
         if (err) {
             return json.renderErrors([err], res);
         } else {
-//            console.log('got %s prs', prs.length);
             _.each(prs, function(issue) {
                 issue.body = marked(issue.body);
             });

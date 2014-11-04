@@ -21,6 +21,8 @@
     running_builds:
       type: running_builds
       refresh_rate: 60
+      options:
+        name: "Currently Running Builds"
 
 #    nupic_travis_latest:
 #      type: "travis_latest"
@@ -101,6 +103,8 @@
         name: "nupic.core"
         url: "http://numenta.org/docs/nupic.core"
 
-    nupic_pr_report:
+    pr_report:
       type: "pr_report"
       refresh_rate: 600
+      options:
+        name: "Open PRs"
