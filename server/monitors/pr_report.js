@@ -1,38 +1,112 @@
-var githubAPI = require('github')
-  , github = new githubAPI({
-        version: '3.0.0',
-        timeout: 5000
-    })
+var _ = require('underscore')
+  , moment = require('moment')
+  , marked = require('marked')
+  , async = require('async')
   , json = require('../utils/json')
-  , CONFIG;
+  , Sprinter = require('sprinter')
+  , sprinter
+  , Foreman = require('travis-foreman')
+  , foreman = undefined
+  , CACHE_DURATION = 10 * 60 // 10 minute
+  ;
 
-function labels(req, res) {
-    var owner = req.query.owner
-      , repo = req.query.repo
-      , number = req.query.number
-      ;
-    github.authenticate({
-        type: 'basic',
-        username: CONFIG.github.username,
-        password: CONFIG.github.password
+function buildTravisUrl(repoSlug, buildId) {
+    return 'https://travis-ci.org/' + repoSlug + '/builds/' + buildId;
+}
+
+function addLatestBuildInfo(prs, builds) {
+    if (!builds) {
+        return prs;
+    }
+    _.each(builds, function(repoBuilds, repo) {
+        _.each(prs, function(issue) {
+            _.each(repoBuilds, function(build) {
+                if(build.pull_request && issue.repo.indexOf(repo) > -1) {
+                    if (build.pull_request_number == issue.number) {
+                        if (! foreman || ! issue.builds) {
+                            issue.builds = [];
+                        }
+                        build.html_url = buildTravisUrl(issue.repo, build.id);
+                        issue.builds.push(build);
+                    }
+                }
+            });
+        });
     });
-    github.issues.getRepoIssue({
-        user: owner,
-        repo: repo,
-        number: number
-    }, function(err, githubResponse) {
-        if (err) { 
-            console.error(err);
-            json.renderErrors([err], res);
+    return prs;
+}
+
+function getPrs(params, callback) {
+    var fetchers = [function(callback) {
+        if (foreman) {
+            foreman.listBuilds(callback);
         } else {
-            json.render(githubResponse, res);
+            callback(null, []);
+        }
+    }, function(callback) {
+        sprinter.getPullRequests(params, callback);
+    }];
+    async.parallel(fetchers, function(err, results) {
+        if (err) {
+            return callback(err);
+        }
+        var builds
+          , issues = [];
+        if (foreman) {
+            builds = results.shift();
+        }
+        // Pull in all issues, closed and open.
+        while (results.length) {
+            issues = issues.concat(results.shift());
+        }
+        issues = _.sortBy(issues, 'updated_at').reverse();
+        callback(null, addLatestBuildInfo(issues, builds));
+    });
+}
+
+marked.setOptions({
+    renderer: new marked.Renderer(),
+    gfm: true,
+    sanitize: true,
+    smartLists: true,
+    smartypants: false
+});
+
+function getPullRequests(req, res) {
+    var sixMonthsAgo = moment().subtract(6, 'months');
+    getPrs({
+        since: sixMonthsAgo
+    }, function(err, prs) {
+        if (err) {
+            return json.renderErrors([err], res);
+        } else {
+            _.each(prs, function(issue) {
+                issue.body = marked(issue.body);
+            });
+            return json.render(prs, res);
         }
     });
 }
 
 module.exports = function(config) {
-    CONFIG = config;
+    var ghUsername = config.github.username
+      , ghPassword = config.github.password
+      , repoSlugs = _.map(config.repos, function(repo) {
+            return repo.slug;
+        })
+      ;
+    sprinter = new Sprinter(
+        ghUsername
+      , ghPassword
+      , repoSlugs
+      , CACHE_DURATION
+    );
+    foreman = new Foreman({
+        organization: 'numenta'
+      , username: ghUsername
+      , password: ghPassword
+    });
     return {
-        labels: labels
-    };
+        pulls: getPullRequests
+    }
 };

@@ -67,11 +67,17 @@ function generateOneMonitorPageHandler(config, callback) {
         callback(function(req, res) {
             var monitor = req.params.monitorName
               , monitorConfig = monitors[monitor]
-              , body = template({
-                  monitorName: monitor
-                , monitorConfig: JSON.stringify(monitorConfig)
-              })
+              , title = ''
+              , body
               ;
+            if (monitorConfig.options && monitorConfig.options.name) {
+                title = monitorConfig.options.name;
+            }
+            body = template({
+                title: title
+                , monitorName: monitor
+                , monitorConfig: JSON.stringify(monitorConfig)
+            });
             res.end(body);
         });
     });
