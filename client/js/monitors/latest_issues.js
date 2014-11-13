@@ -1,6 +1,7 @@
 $(function() {
 
     function initialize(id, config, server, template) {
+        // _recentIssues is a Sprinter-Dash URL
         $.getJSON('/_recentIssues', function(response) {
             response.title = 'Latest ' + response.issues.length + ' Updated Issues';
             _.each(response.issues, function(issue) {
