@@ -25,7 +25,7 @@
     "request": "2.29.0",
     "marked": "^0.3.2",
     "sprinter": "^1.0.0",
-    "sprinter-dash": "^1.0.0",
+    "sprinter-dash": "^1.0.1",
     "travis-ci": "1.1.1",
     "travis-foreman": "0.0.3",
     "underscore": "1.5.2"
