@@ -4,18 +4,22 @@ var request = require('request'),
 
 function handleProxyRequest(bundle, callback) {
     var url = bundle.endpoint,
-        method = bundle.method || 'GET';
+        method = bundle.method || 'GET',
+        headers = {'User-Agent': 'NuPIC Tooling'};
 
-    request({url: url, method: method}, function(err, resp, body) {
-        if (err) {
-            var error = new Error('Call to ' + url + ' failed!.\n' +
-                'The server did not respond with ' +
-                'a success status code.');
-            console.error(error);
-            return callback(error, resp, body);
+    request(
+        {url: url, method: method, headers: headers},
+        function(err, resp, body) {
+            if (err) {
+                var error = new Error('Call to ' + url + ' failed!.\n' +
+                    'The server did not respond with ' +
+                    'a success status code.');
+                console.error(error);
+                return callback(error, resp, body);
+            }
+            callback(null, resp, body);
         }
-        callback(null, resp, body);
-    });
+    );
 }
 
 module.exports = function() {

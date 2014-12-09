@@ -82,6 +82,9 @@
     travis_status:
       type: "travis_status"
 
+    core_sha_diff:
+      type: "core_sha_diff"
+
 #    issues_status:
 #      type: "issues_status"
 

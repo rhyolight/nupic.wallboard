@@ -24,7 +24,7 @@ $(function() {
                 });
             }
         });
-    };
+    }
 
     window.WB.github_status = initialize;
 
