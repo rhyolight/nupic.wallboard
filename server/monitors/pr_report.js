@@ -81,7 +81,14 @@ function getPullRequests(req, res) {
             return json.renderErrors([err], res);
         } else {
             _.each(prs, function(issue) {
-                issue.body = marked(issue.body);
+                if (issue.body) {
+                    try {
+                        issue.body = marked(issue.body);
+                    } catch (markedError) {
+                        issue.body = "Error parsing issue markdown!";
+                        console.warn(markedError);
+                    }
+                }
             });
             return json.render(prs, res);
         }
