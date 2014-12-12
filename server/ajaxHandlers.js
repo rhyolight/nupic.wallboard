@@ -48,7 +48,6 @@ function listMonitors(req, res) {
  */
 function monitorRequest(req, res) {
     var params = req.params;
-    // console.log('Monitor request to ' + params.monitor + '/' + params.command);
     monitors[params.monitor][params.command](req, res);
 }
 
