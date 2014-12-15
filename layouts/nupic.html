@@ -15,17 +15,26 @@
 
 <div class="header">
     <div class="container-fluid">
-        <!-- <div id="settings"></div> -->
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-8">
                 <h1>Numenta OS Status</h1>
-                <a href="monitor/pr_report" target="_blank">Open PRs</a> | <a href="monitor/running_builds" target="_blank">Current Builds</a> | <a href="roadmap" target="_blank">Road Map</a>
             </div>
-            <div class="col-md-1" id="github_status"></div>
-            <div class="col-md-1" id="travis_status"></div>
-            <div class="col-md-1" id="numenta_org_status"></div>
-            <div class="col-md-1" id="nupic_doc_build_status"></div>
-            <div class="col-md-1" id="nupic_core_doc_build_status"></div>
+            <div class="col-md-4">
+                <ul>
+                    <li><a href="monitor/pr_report" target="_blank">Open PRs</a></li>
+                    <li><a href="monitor/running_builds" target="_blank">Current Builds</a></li>
+                    <li><a href="roadmap" target="_blank">Road Map</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2" id="github_status"></div>
+            <div class="col-md-2" id="travis_status"></div>
+            <div class="col-md-2" id="numenta_org_status"></div>
+            <div class="col-md-2" id="nupic_doc_build_status"></div>
+            <div class="col-md-2" id="nupic_core_doc_build_status"></div>
             <div class="col-md-2" id="core_sha_diff"></div>
         </div>
     </div>
