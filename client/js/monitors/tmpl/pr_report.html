@@ -86,6 +86,10 @@
     width: 45px;
     margin: 3px;
 }
+.pull-request table th.title td.repo {
+    font-size: 12pt;
+    padding-left: 10px;
+}
 </style>
 
 <h3>Open Pull Requests <small>{{open}} open, {{overdue}} overdue</h3>
@@ -106,7 +110,15 @@
                     </a>
                 </td>
                 <th class="title">
-                    <a target="_blank" href="{{html_url}}">{{title}}</a>
+                    <table><tbody>
+                    <tr>
+                        <td><a target="_blank" href="{{html_url}}">{{title}}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="repo"><a target="_blank" href="{{html_url}}">{{repo}}</a></td>
+                    </tr>
+                    </tbody></table>
+
                 </th>
                 <td>Opened <span class="open-since">{{created_at}}</span></td>
                 <td class="revalidate">
