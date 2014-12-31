@@ -17,6 +17,13 @@ $(function() {
                         build.cssClass = 'pulsate';
                     }
                 });
+                // Add names and avatars for "unassigned" issues.
+                if (! issue.assignee) {
+                    issue.assignee = {
+                        login: 'unassigned'
+                      , avatar_url: '/client/images/unassigned.png'
+                    };
+                }
             });
             template(response);
             // A bit hacky, but adding a header before the table.
