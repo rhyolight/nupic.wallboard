@@ -10,7 +10,7 @@ var path = require('path')
 function initializeModulesWithin(dir, exclusions) {
     var output = {}
       , fullDir = path.join(__dirname, '..', '..', dir)
-      , requirePath = '../' + fullDir.split('server/').pop() + '/'
+      , requirePath = path.join('..', fullDir.split('server').pop())
       ;
     fs.readdirSync(fullDir).forEach(function(fileName) {
         var moduleName = fileName.split('.').shift()
@@ -21,7 +21,7 @@ function initializeModulesWithin(dir, exclusions) {
         if(! excluded && 
                 fileName.charAt(0) != "." 
                 && fileName.substr(fileName.length - 3) == ".js")   {
-            output[moduleName] = require(requirePath + moduleName);
+            output[moduleName] = require(path.join(requirePath,  moduleName));
         }
     });
     return output;
