@@ -47,7 +47,7 @@ function getPrs(params, callback) {
         sprinter.getPullRequests(params, callback);
     }];
     async.parallel(fetchers, function(err, results) {
-        if (err) {
+        if (err && err.length) {
             return callback(err);
         }
         var builds
@@ -78,6 +78,7 @@ function getPullRequests(req, res) {
         since: sixMonthsAgo
     }, function(err, prs) {
         if (err) {
+            console.log(err);
             return json.renderErrors([err], res);
         } else {
             _.each(prs, function(issue) {

@@ -12,7 +12,7 @@ function status(req, res) {
         owner_name: owner,
         name: repo
     }, function(err, travisResponse) {
-        if (err) {
+        if (err && err.length) {
             console.error(err);
             json.renderErrors([err], res);
         } else {
