@@ -35,11 +35,18 @@
         <tr class="{{type}}">
             <td>{{slug}}</td>
             <td>
-            {{#if travis}}
+                {{#if travis}}
                 <a href="https://travis-ci.org/{{slug}}" target="_blank">
                     <img src="https://travis-ci.org/{{slug}}.svg?branch={{branch}}"/>
                 </a>
-            {{/if}}
+                {{/if}}
+            </td>
+            <td>
+                {{#if appveyor}}
+                <a href="{{appveyor.url}}" target="_blank">
+                    <img src="{{appveyor.badge}}"/>
+                </a>
+                {{/if}}
             </td>
             <td>
                 {{#if coverage}}
