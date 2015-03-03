@@ -76,6 +76,21 @@
         organization: "numenta"
         repository: "nupic.core"
 
+    htm_java_travis_builds:
+      type: "travis_builds"
+      options:
+        pull_requests: false
+        organization: "numenta"
+        repository: "htm.java"
+
+    htm_java_travis_pr_builds:
+      type: "travis_builds"
+      options:
+        pull_requests: true
+        organization: "numenta"
+        repository: "htm.java"
+
+
     github_status:
       type: "github_status"
 
