@@ -1,7 +1,7 @@
 
 $(function() {
 
-    var OVERDUE_GAP = 7 * 24 * 60 * 60 * 1000
+    var OVERDUE_AT = moment().subtract(1, 'month')
       , validateUrl = "http://issues.numenta.org:8081/validate";
 
     function initialize(id, config, server, template) {
@@ -13,7 +13,7 @@ $(function() {
             prs.sort(function(a, b) {
                 return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
             }).forEach(function(pr) {
-                if ((now - new Date(pr.created_at).getTime()) > OVERDUE_GAP) {
+                if (new Date(pr.created_at).getTime() < OVERDUE_AT) {
                     pr.overdue = true;
                     overdueCount++;
                 }

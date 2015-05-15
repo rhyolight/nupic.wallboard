@@ -99,9 +99,10 @@ function getPullRequests(req, res) {
 module.exports = function(config) {
     var ghUsername = config.github.username
       , ghPassword = config.github.password
-      , repoSlugs = _.map(config.repos, function(repo) {
-            return repo.slug;
+      , primaryRepos = _.filter(config.repos, function(repo) {
+            return repo.type == 'primary';
         })
+      , repoSlugs = _.pluck(primaryRepos, 'slug')
       ;
     sprinter = new Sprinter(
         ghUsername
