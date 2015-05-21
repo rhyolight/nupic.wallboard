@@ -2,7 +2,7 @@
 $(function() {
 
     var OVERDUE_AT = moment().subtract(1, 'month')
-      , validateUrl = "http://issues.numenta.org:8081/validate";
+      , validateUrl = "http://tooling.numenta.org/validate";
 
     function initialize(id, config, server, template) {
         server.get('pulls', null, function(prs) {
