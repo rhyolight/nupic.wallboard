@@ -1,7 +1,7 @@
 $(function() {
 
-    var issuesUrl = "http://issues.numenta.org:8081/status.json?callback=?"
-      , statusUrl = "http://issues.numenta.org:8081/status"
+    var issuesUrl = "http://tooling.numenta.org/status.json?callback=?"
+      , statusUrl = "http://tooling.numenta.org/status"
       // give up if no response in 3s
       , TIMEOUT = 3000
       ;
